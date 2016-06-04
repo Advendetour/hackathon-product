@@ -1,12 +1,61 @@
 <!DOCTYPE html>
 <html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+</head>
 <body>
+	<h1>Welcome to Angel Trips!</h1>
 
-<h1>Welcome to Angel Trips!</h1>
+	<h3>Enter:</h3>
+	<p>Start City</p>
+	<input name="start-city" type="text" > <br/>
+	<p>End City</p>
+	<input name="end-city" type="text" > <br/>
+	<p>Duration(days):</p><input name="time" type="text">
+	<button type="submit" value="submit" >Get Route</button>
 
-<form>
+	<div class = "updateTime" style="display:none">
+		<p>Time left for your trip: @</p>
+	</div>
 
-</form>
+	<div id="updateActivity" style="display:none">
+		<p>startCity</p>
+		<table id="tableDisplay">
 
+		</table>
+		<p>EndCity</p>
+	</div>
+	<template id="activityTemp">
+	</template>
+
+	<script>
+	var newAct
+	var i;
+	var display = getAllActivity(startCity, endCity);
+	var out="<tr><td>"+startCity+"</td></tr>"
+
+	for(i=0;i<display.length;i++){
+		out+= "<tr><tr id=\"" +display[i].name+"\">"+ display[i].name +"</td></tr>"
+	}
+	out+="<tr><td>"+endCity+"</td></tr>"
+	document.getElementById("01").innerHTML = out;
+
+	$(document).ready(function(){
+		
+		$(".tr").click(function(){
+			var actName=$(this).text();
+			display=getAllActivity(actName, endCity);
+			$("#updateTime").show()
+			$("#updateActivity").show()
+		})
+	})
+
+	
+	for(i=0;i<display.length;i++){
+		newAct+= "<tr><tr id=\"" +display[i].name+"\">"+ display[i].name +"</td></tr>"
+	}
+	$("#tableDisplay").appendChild(newAct)
+
+	</script>
 </body>
 </html>
