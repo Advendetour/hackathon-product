@@ -21,7 +21,15 @@ $(document).ready(function(){
 			$("#results").text(JSON.stringify(data));
 	    });
     });
-}); 
+});
+
+function coordinatesConvert(cityName)
+{
+	var newcoord = "https://maps.googleapis.com/maps/api/geocode/json?address="+cityName+"&key=AIzaSyAwe6XMoayWw_yOH48YW4zBNf2XGnyZYeo";
+	//console.log(html);
+  var res = JSON.parse(newcoord)
+	return (res.results[0].geometry.location.lat,res.results[0].geometry.location.lng);
+}
 
 /*$("button").click(function(){
     $.get("demo_test.asp", function(data, status){
