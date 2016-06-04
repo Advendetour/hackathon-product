@@ -1,7 +1,7 @@
 var apikey = "kRAwQaC1k0hxXZM2G2CfOJbgndiqGv8E";
 function find_start() {
     //
-    var city = document.getElementById("start_input").value;
+    var city = document.getElementById("dep_city").value;
     city = encodeURI(city);
     var today = "2016-06-10"; // replace with function later
     var tmrw = "2016-06-12"; // replace with function later
