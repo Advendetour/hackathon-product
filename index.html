@@ -8,10 +8,10 @@
 
 	<h3>Enter:</h3>
 	<p>Start City</p>
-	<input name="start-city" type="text" > <br/>
+	<input name="dep_city" type="text" > <br/>
 	<p>End City</p>
-	<input name="end-city" type="text" > <br/>
-	<p>Duration(days):</p><input name="time" type="text">
+	<input name="dest_city" type="text" > <br/>
+	<p>Duration(days):</p><input name="duration" type="text">
 	<button type="submit" value="submit" >Get Route</button>
 
 	<div class = "updateTime" style="display:none">
@@ -25,36 +25,43 @@
 		</table>
 		<p>EndCity</p>
 	</div>
-	<template id="activityTemp">
-	</template>
+	
 
 	<script>
-	var newAct
+	var newModel=getUserQueryModel();
+	var newAct;
 	var i;
-	var display = getAllActivity(startCity, endCity);
-	var out="<tr><td>"+startCity+"</td></tr>"
+	var display = queryForAllCities(newModel["start"], newModel["end"]);
+	var out="<tr><td>"+newModel["start"]+"</td></tr>";
 
-	for(i=0;i<display.length;i++){
-		out+= "<tr><tr id=\"" +display[i].name+"\">"+ display[i].name +"</td></tr>"
-	}
-	out+="<tr><td>"+endCity+"</td></tr>"
-	document.getElementById("01").innerHTML = out;
 
 	$(document).ready(function(){
 		
 		$(".tr").click(function(){
 			var actName=$(this).text();
-			display=getAllActivity(actName, endCity);
+			display=queryForAllCities(newModel["start"], newModel["end"]);
 			$("#updateTime").show()
 			$("#updateActivity").show()
-		})
-	})
+		});
+	});
 
-	
-	for(i=0;i<display.length;i++){
-		newAct+= "<tr><tr id=\"" +display[i].name+"\">"+ display[i].name +"</td></tr>"
+
+	function appendTable(sel){
+		for(i=0;i<display.length;i++){
+			newAct+= "<tr><tr id=\"" +display[i].name+"\">"+ display[i].name +"</td></tr>"
+		}
+		$(sel).appendChild(newAct);
 	}
-	$("#tableDisplay").appendChild(newAct)
+	
+	//display activities in table
+	function displayTable(sel){
+		for(i=0;i<display.length;i++){
+			out+= "<tr><tr id=\"" +display[i].name+"\">"+ display[i].name +"</td></tr>"
+		}
+		out+="<tr><td>"+endCity+"</td></tr>"
+		$(sel).text = out;
+	}
+	
 
 	</script>
 </body>
