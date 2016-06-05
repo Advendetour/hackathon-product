@@ -69,8 +69,17 @@ $(document).on('click', '.city', function(){
 				city.find(".activities").append(ret);
 			})
 		}
-	} else (console.log("not empty"));
-	activities.slideToggle();
+		activities.slideDown("slow");
+	} else {
+		if(activities.css('display') == 'none'){ 
+			activities.show('slow'); 
+		} else { 
+			activities.hide('slow'); 
+		}
+	}
+	
+	/*if (activities.display)
+	activities.slideToggle();*/
 
 });
 
@@ -84,7 +93,7 @@ $(document).on('click', '.add_city', function(){
 	// now find the new set of cities!
 	//console.log(p.attr("data-name"));
 	var output = find_cities(p.attr("data-name"),destcity);
-	$(".activities").slideUp(); // look into this!
+	$(".activities").hide(); // look into this!
 	p.after(output);
 	//console.log(output);
 });
