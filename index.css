@@ -1,0 +1,13 @@
+.city {
+	border-radius: 10px;
+	background: grey;
+	margin: 20px;
+	padding: 10px;
+}
+.activity{
+	border-radius: 10px;
+	background: lightgrey;
+	margin: 10px;
+	padding: 5px;
+	left: 20px;
+}
