@@ -73,3 +73,49 @@ function getActivities(cityName) {
 }
 
 
+function getCitiesInBetween(startCity, endCity){
+	var start-lag = coordinatesConvert(startCity)[0];
+	var start-lon = coordinatesConvert(startCity)[1];
+	var end-lag = coordinatesConvert(endCity)[0];
+	var end-lon = coordinatesConvert(endCity)[1];
+	var mid = getMidpointBetweenTwoCities(start-lat, start-lon, end-lat, end-lon);
+
+	var html = queryCitiesInBetween(startCity, endCity);
+	var model_arr=[];
+	$.get(html,function(data,status){ //data is an array of JSON object
+		//parse an object
+		var actModel;
+		for (i=0; i<data.length;i++){
+			var name = data[i].name;
+			var lat = data[i]["coordinates"][1];
+			var lon = data[i]["coordinates"][0];
+			var dis = getDistance(lat,lon,mid[0],mid[1])
+			cityModel= {"name": name, "lat": lat, "lon": lon, "dis": dis};
+			model_arr[i]=cityModel;
+		}
+
+	});
+	return model_arr;
+}
+
+function sortAllCities(cityModels_arr){
+	var firstModels=[]
+	//sort input cityModels
+	cityModels_arr.sort(function(a,b){
+		if (a.dis > b.dis){
+			return 1;
+		}
+		if (a.dis > b.dis){
+			return -1;
+		}
+		return 0;
+	});
+	//get the first 5 cityModels
+	for (i=0;i<5;i++){
+		firstModels[i]=cityModels_arr[i];
+	}
+	return firstModels;
+
+}
+
+
