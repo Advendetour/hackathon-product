@@ -137,7 +137,7 @@ function stateCountry(cityName){
     return ret;
 }
 
-function difflatlong(city1,city2){
+/*function difflatlong(city1,city2){
   var lat;
   var long;
 
@@ -149,14 +149,14 @@ function difflatlong(city1,city2){
 
   var result = [lat,long];
   return result;
-}
+}*/
 
-function totaldiff(city1,city2) {
+/*function totaldiff(city1,city2) {
 	var lat = difflatlong(city1,city2)[0];
 	var long = difflatlong(city1,city2)[1];
 	var total = Math.sqrt(Math.pow(lat,2),Math.pow(long,2));
 	return total;
-}
+}*/
 
 function getUserQueryModel(){
 	var start = $("#dep_city").val();
