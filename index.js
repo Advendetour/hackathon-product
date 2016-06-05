@@ -14,6 +14,7 @@ $(document).ready(function(){
 		$("#cities").html("");
 		depcity = $("#dep_city").val();
 		destcity = $("#dest_city").val();
+		distancePerDay = $("#distance_per_day").val();
 
 		// add starting city first
 		var ret = '<div class="city" data-set="true" data-name='+depcity+'>'+depcity+", "+stateCountry(depcity)[0]+", "+stateCountry(depcity)[1]+'<div class="activities"></div></div>';
