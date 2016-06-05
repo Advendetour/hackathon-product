@@ -82,8 +82,7 @@ function difflatlong(city1,city2){
 
 }
 
-var apikey = "2yF8AJJcItBwK5UYYbyGrArGlpbPqyIL";
-function queryCitiesInBetween(startCity, endCity, distancePerDay)
+function getBreakPoint(startCity, endCity, distancePerDay) 
 {
 	//c1[0] is latitude, c1[1] is longitude
 	var c1 = coord(startCity);
@@ -105,7 +104,14 @@ function queryCitiesInBetween(startCity, endCity, distancePerDay)
 	var bpLng = (c1[1] + times * c2[1])/(1+times);
 	bpLat = bpLat.toFixed(3);
 	bpLng = bpLng.toFixed(3);
-	//var breakPoint = (bpLat, bpLng);
+	var breakPoint = [bpLat, bpLng];
+	return breakPoint;
+}
+
+var apikey = "2yF8AJJcItBwK5UYYbyGrArGlpbPqyIL";
+function queryCitiesInBetween(startCity, endCity, distancePerDay)
+{
+	var bp = getBreakPoint(startCity, endCity, distancePerDay);
 
 	//midpoint[0] is latitude, midpoint[1] is longitude
 	//var diffInLat = (c2[0]-c1[0]);
@@ -113,7 +119,7 @@ function queryCitiesInBetween(startCity, endCity, distancePerDay)
 	//var midpoint = [(diffInLat/2)+c1[0],(diffInLng/2)+c1[1]];
 
 	var radiusInKm = Math.min(distancePerDay, 100);
-	var html1 = "http://terminal2.expedia.com/x/geo/features?within="+radiusInKm+"km&lat="+bpLat+"&lng="+bpLng+"&type=city&apikey="+apikey;
+	var html1 = "http://terminal2.expedia.com/x/geo/features?within="+radiusInKm+"km&lat="+bp[0]+"&lng="+bp[1]+"&type=city&apikey="+apikey;
 	//return html1;
 	return html1;
 }
