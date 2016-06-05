@@ -112,7 +112,7 @@ function queryCitiesInBetween(startCity, endCity, distancePerDay)
 	//var diffInLng = (c2[1]-c1[1]);
 	//var midpoint = [(diffInLat/2)+c1[0],(diffInLng/2)+c1[1]];
 
-	var radiusInKm = Math.min(distancePerday, 100);
+	var radiusInKm = Math.min(distancePerDay, 100);
 	var html1 = "http://terminal2.expedia.com/x/geo/features?within="+radiusInKm+"km&lat="+bpLat+"&lng="+bpLng+"&type=city&apikey="+apikey;
 	//return html1;
 	return html1;
