@@ -37,27 +37,13 @@ $(document).ready(function(){
 
 function find_cities(dep, dest){
 	citylist = getCitiesInBetween(dep, dest);
-	//console.log(citylist);
-/*yourArray.forEach( function (arrayItem)
-{
-    var x = arrayItem.prop1 + 2;
-    alert(x);
-});*/
-	// [function call] returns array of city models
-	//citylist = [{"name":"Montreal", "lat":"1","long":"1"},{"name":"Kingston", "lat":"1","long":"1"},{"name":"Toronto", "lat":"1","long":"1"}];
-
 	var output = "";
 	// add each returned city
 	citylist.forEach(function(value){
-		console.log(value);
-		// ideally, value will be a big ol object with extra info and stuff
-		// like cheapest hotel, coordinates, region id, etc
-		// but right now, i am just assuming name
-		var ret = '<div class="city" data-index='+(index+1)+' data-set="false" data-name='+value.name+'>'+value.name+'<button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
+		var ret = '<div class="city" data-set="false" data-name='+value.name+'>'+value.name+'<button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
 		output += ret;
-	})
+	});
 	return output;
-
 }
 
 // on click of city tab, query or toggle display of related activities
@@ -147,35 +133,32 @@ function getActivities(cityName) {
 			actModel= {"name": name, "price": price, "dur": dur, "recScore": recScore, "img": img};
 			model_arr[i]=actModel;
 		}
-
 	})
 	return model_arr;
 }
 
 
 function getCitiesInBetween(startCity, endCity){
-/*	var startlat = coord(startCity)[0];
-	var startlon = coord(startCity)[1];
-	var endlat = coord(endCity)[0];
-	var endlon = coord(endCity)[1];*/
-	
 
 	var html = queryCitiesInBetween(startCity, endCity);
 	var model_arr=[];
-	$.get(html,function(data,status){ //data is an array of JSON object
-		//parse an object
-		//console.log(data);
-		var actModel;
-		for (i=0; i<data.length;i++){
-			var name = data[i]["name"];
-			//console.log(name);
-			var lat = data[i]["position"]["coordinates"][1];
-			var lon = data[i]["position"]["coordinates"][0];
-			var dis = calcCrow(lat,lon,breakPoint[0],breakPoint[1])
-			cityModel= {"name": name, "lat": lat, "lon": lon, "dis": dis};
-			model_arr[i]=cityModel;
+
+	$.get({
+		url: html,
+		async:false,
+		success: function(data){
+			var actModel;
+			for (i=0; i<data.length;i++){
+				var name = data[i]["name"];
+				//console.log(name);
+				var lat = data[i]["position"]["coordinates"][1];
+				var lon = data[i]["position"]["coordinates"][0];
+				var dis = calcCrow(lat,lon,breakPoint[0],breakPoint[1])
+				cityModel= {"name": name, "lat": lat, "lon": lon, "dis": dis};
+				model_arr[i]=cityModel;
+			}
+			model_arr = sortAllCities(model_arr);
 		}
-		sortAllCities();
 	});
 	return model_arr;
 }
@@ -192,10 +175,10 @@ function queryCitiesInBetween(startCity, endCity)
     return html1;
 }
 
-function sortAllCities(){
+function sortAllCities(model_arr){
 	var firstModels=[]
 	//sort input cityModels
-	citylist.sort(function(a,b){
+	model_arr.sort(function(a,b){
 		if (a.dis > b.dis){
 			return 1;
 		}
@@ -207,9 +190,9 @@ function sortAllCities(){
 	//get the first 5 cityModels
 	for (i=0;i<5;i++){
 		//console.log(citylist[i])
-		firstModels[i]=citylist[i];
+		firstModels[i]=model_arr[i];
 	}
-	citylist = firstModels;
+	return firstModels;
 
 }
 
