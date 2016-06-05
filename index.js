@@ -40,7 +40,7 @@ function find_cities(dep, dest){
 	var output = "";
 	// add each returned city
 	citylist.forEach(function(value){
-		var ret = '<div class="city" data-set="false" data-name='+value.name+'>'+value.name+'<button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
+		var ret = '<div class="city" data-set="false" data-name=\''+value.name+'\'>'+value.name+'<button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
 		output += ret;
 		//calculateAndDisplayRoute(value.name);
 	});
@@ -75,8 +75,9 @@ $(document).on('click', '.add_city', function(){
 	p.attr("data-set", "true");
 	$(".city[data-set='false']").slideUp();
 	// now find the new set of cities!
-	console.log(p.attr("data-name"),+","+destcity);
-	//var output = find_cities(p.attr("data-name"),destcity);
+	//console.log(p.attr("data-name"));
+	var output = find_cities(p.attr("data-name"),destcity);
+	p.after(output);
 	//console.log(output);
 
 });
@@ -119,7 +120,6 @@ function totaldiff(city1,city2) {
 	return total;
 }
 
-
 function getUserQueryModel(){
 	var start = $("#dep_city").val();
 	var end = $("#dest_city").val();
@@ -133,19 +133,21 @@ function getActivities(cityName) {
     var today = "2016-06-10"; // replace with function later
     var tmrw = "2016-06-12"; // replace with function later
 	var html = "http://terminal2.expedia.com:80/x/activities/search?location="+cityName+"&startDate="+today+"&endDate="+tmrw+"&apikey="+apikey;
-	
+	console.log(html);
     jQuery.getJSON({
         url: html,
         async:false,
         success: function(data){
+        	data = data.activities;
 	        var actModel;
 			for (i=0; i<data.length;i++){
-				var name = data[i].title;
-				var price = data[i].fromPrice;
-				var dur = data[i].duration;
-				var recScore = data[i].recommendationScore;
-				var img = data[i].imageUrl;
+				var name = data.activities[i].title;
+				var price = data.activities[i].fromPrice;
+				var dur = data.activities[i].duration;
+				var recScore = data.activities[i].recommendationScore;
+				var img = data.activities[i].imageUrl;
 				actModel= {"name": name, "price": price, "dur": dur, "recScore": recScore, "img": img};
+				console.log(actModel);
 				model_arr[i]=actModel;
 			}
 		}
