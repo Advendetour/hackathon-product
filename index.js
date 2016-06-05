@@ -1,52 +1,106 @@
+var citylist;
+
 $(document).ready(function(){
 	// start the search by finding 5 cities between the start and end destinations
 	$("#start_search").click(function(){
-
-		// [function call] returns array of cities
-		var citylist = ["Montreal", "Kingston", "Toronto"];
+		$("#cities").html("");
+		var depcity = $("#dep_city").val();
+		var destcity = $("#dest_city").val();
 
 		// add starting city first
-		var depcity = $("#dep_city").val();
-		var ret = '<div class="city">'+depcity+'<div class="activities"></div></div>';
+		var ret = '<div class="city" data-index=0 data-set="true" data-name='+depcity+'>'+depcity+'<div class="activities"></div></div>';
 		$("#cities").append(ret);
 
-		// add each returned city
-		$.each(citylist, function(index, value){
-			// ideally, value will be a big ol object with extra info and stuff
-			// like cheapest hotel, coordinates, region id, etc
-			// but right now, i am just assuming name
-			var ret = '<div class="city">'+value+'<div class="activities"></div></div>';
-			$("#cities").append(ret);
-		})
+		// find and display mid cities
+		var output = find_cities($("#dep_city"), $("#dest_city"));
+		$("#cities").append(output);
 
 		// finally add destination city
-		var destcity = $("#dest_city").val();
-		var ret = '<div class="city">'+destcity+'<div class="activities"></div></div>';
+		var lastindex = citylist.length;
+		var ret = '<div class="city" data-index='+(lastindex+1)+' data-set="true" data-name='+destcity+'>'+destcity+'<div class="activities"></div></div>';
 		$("#cities").append(ret);
 
+		// lastly, hide all activities section so toggle() works later
 		$(".activities").hide();
 	});
-
+	$("#end_search").click(function(){
+		$(".city[data-set='false']").hide();
+	});
 });
 
-//functions for dynamic/new doms
+function find_cities(dep, dest){
+
+	// [function call] returns array of city models
+	citylist = [{"name":"Montreal", "lat":"1","long":"1"},{"name":"Kingston", "lat":"1","long":"1"},{"name":"Toronto", "lat":"1","long":"1"}];
+
+	var output = "";
+	// add each returned city
+	$.each(citylist, function(index, value){
+		// ideally, value will be a big ol object with extra info and stuff
+		// like cheapest hotel, coordinates, region id, etc
+		// but right now, i am just assuming name
+		var ret = '<div class="city" data-index='+(index+1)+' data-set="false" data-name='+value.name+'>'+value.name+'<button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
+		output += ret;
+	})
+
+	return output;
+
+}
 
 // on click of city tab, query or toggle display of related activities
 $(document).on('click', '.city', function(){
 	var city = $(this);
 	var activities = city.find(".activities");
-	
 	// if activities section is blank, run query!!
 	if (activities.text()==""){
-		// [function call] returns array of activities
-		var activitylist = ["swim", "camp", "drive", "ski"];
-		// list each activity in a city
-		$.each(activitylist, function(index, value){
-			// again, would like value to be a big ol object with time, price, details, etc
-			var ret = '<div class="activity">'+value+'</div>';
-			city.find(".activities").append(ret);
-		})
-	} else (console.log("not empty"));
+		find_activities(city);
+	} //else (console.log("not empty"));
 	activities.slideToggle();
-
 });
+
+function find_activities(city){
+	// [function call] returns array of activities
+	var activitylist = [{"name":"swim", "price":"p", "dur":"d", "score":"s", "img":"i"},{"name":"camp", "price":"p", "dur":"d", "score":"s", "img":"i"},{"name":"ski", "price":"p", "dur":"d", "score":"s", "img":"i"}];
+	// list each activity in a city
+	$.each(activitylist, function(index, value){
+		// again, would like value to be a big ol object with time, price, details, etc
+		var ret = '<div class="activity">'+value.name+'<button type="button" value="'+value.name+'" class="add_act">Add to route</button></div>';
+		city.find(".activities").append(ret);
+	})
+}
+
+// add city to route, remove old cities, find new sets in between
+$(document).on('click', '.add_city', function(){
+	$(this).hide();
+	$(this).parent().attr("data-set","true");
+	var mid = $(this).parent().attr("data-name");
+	// remove prev and next cities in list up to those already added to itinerary
+	var start = remove_prev($(this).parent());
+	var end = remove_next($(this).parent());
+
+	var set1 = find_cities(start,mid);
+	var set2 = find_cities(mid,end);
+	//console.log(set2);
+	$(this).parent().before(set1);
+	$(this).parent().after(set2);
+	$(".activities").hide();
+});
+
+function remove_prev(div){
+	var prev = div.prev();
+	if (prev.attr("data-set")=="false"){
+		prev.hide();
+		return remove_prev(prev);
+	} else {
+		return prev.attr("data-name");
+	}
+}
+function remove_next(div){
+	var next = div.next();
+	if (next.attr("data-set")=="false"){
+		next.hide();
+		return remove_next(next);
+	} else {
+		return next.attr("data-name");
+	}
+}
