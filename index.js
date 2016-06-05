@@ -261,7 +261,6 @@ function getCheapestHotel(cityName){
     var today = "2016-06-10"; // replace with function later
     var tmrw = "2016-06-11"; // replace with function later
     var html = "http://terminal2.expedia.com:80/x/mhotels/search?city="+city+"&checkInDate=2016-12-01&checkOutDate=2016-12-03&room1=1&apikey="+apikey;
-<<<<<<< Updated upstream
     //console.log(html);
     $.get({
     	url: html,
@@ -281,27 +280,6 @@ function getCheapestHotel(cityName){
 				return a.price-b.price;
 			});
     	}
-=======
-    $.get(html,function(data,status){ //data is an array of JSON object
-		//parse an object
-		var hotelModel;
-		for (i=0; i<data.length;i++){
-			var name = data[i].name;
-			var price = data[i].price;
-
-			hotelModel= {"name": name, "price": price};
-			model_arr[i]=hotelModel;
-		}
-	});
-	model_arr.sort(function(a,b){
-		if (a.price > b.price){
-			return 1;
-		}
-		if (a.price > b.price){
-			return -1;
-		}
-		return 0;
->>>>>>> Stashed changes
 	});
 	return model_arr[0];
 }
