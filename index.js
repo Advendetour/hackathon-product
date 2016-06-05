@@ -54,7 +54,7 @@ $(document).on('click', '.city', function(){
 function coord(cityName){
     var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+cityName+"&key=AIzaSyAwe6XMoayWw_yOH48YW4zBNf2XGnyZYeo";
     var ret;
-    $.getJSON({
+    jQuery.getJSON({
         url: url,
         async:false,
         success: function(result){
