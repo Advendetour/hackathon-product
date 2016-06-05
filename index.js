@@ -115,13 +115,6 @@ function queryCitiesInBetween(startCity, endCity, distancePerDay)
 	var radiusInKm = Math.min(distancePerday, 100);
 	var html1 = "http://terminal2.expedia.com/x/geo/features?within="+radiusInKm+"km&lat="+bpLat+"&lng="+bpLng+"&type=city&apikey="+apikey;
 	//return html1;
-	var ret;
-	jQuery.getJSON({
-		url:html1,
-		async:false,
-		success:function(result){
-
-		}
-	})
+	return html1;
 }
 
