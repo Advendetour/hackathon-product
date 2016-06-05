@@ -86,8 +86,8 @@ var apikey = "2yF8AJJcItBwK5UYYbyGrArGlpbPqyIL";
 function queryCitiesInBetween(startCity, endCity, distancePerDay)
 {
 	//c1[0] is latitude, c1[1] is longitude
-	var c1 = coordinatesConvert(startCity);
-	var c2 = coordinatesConvert(endCity);
+	var c1 = coordConvert(startCity);
+	var c2 = coordConvert(endCity);
 	//var c1 = [48.85, 2.35];
 	//var c2 = [41.89, 12.48];
 	var radlat1 = Math.PI * c1[0]/180;
