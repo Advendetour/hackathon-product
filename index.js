@@ -104,3 +104,41 @@ function remove_next(div){
 		return next.attr("data-name");
 	}
 }
+
+function coord(cityName){
+    var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+cityName+"&key=AIzaSyAwe6XMoayWw_yOH48YW4zBNf2XGnyZYeo";
+    var ret;
+    jQuery.getJSON({
+        url: url,
+        async:false,
+        success: function(result){
+            var lat = result.results[0].geometry.location.lat;
+            var long = result.results[0].geometry.location.lng;
+            var result = [lat,long];
+            ret = result;
+        }
+    });
+    return ret;
+}
+
+function difflatlong(city1,city2){
+  var lat;
+  var long;
+
+  var difflat = coord(city2)[0] - coord(city1)[0]
+  var lat = difflat * 110.574;
+
+  var difflong = coord(city2)[1] - coord(city1)[1];
+  var long = difflong * 111.320 * Math.cos(lat/(2 * Math.PI));
+
+  var result = [lat,long];
+  return result;
+
+}
+
+function totaldiff(city1,city2) {
+	var lat = difflatlong(city1,city2)[0];
+	var long = difflatlong(city1,city2)[1];
+	var total = Math.sqrt(Math.pow(lat,2),Math.pow(long,2));
+	return total;
+}
