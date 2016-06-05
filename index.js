@@ -82,6 +82,7 @@ function difflatlong(city1,city2){
 
 }
 
+var breakPoint =[0,0];
 function getBreakPoint(startCity, endCity, distancePerDay) 
 {
 	//c1[0] is latitude, c1[1] is longitude
@@ -104,14 +105,13 @@ function getBreakPoint(startCity, endCity, distancePerDay)
 	var bpLng = (c1[1] + times * c2[1])/(1+times);
 	bpLat = bpLat.toFixed(3);
 	bpLng = bpLng.toFixed(3);
-	var breakPoint = [bpLat, bpLng];
-	return breakPoint;
+	breakPoint = [bpLat, bpLng];
 }
 
 var apikey = "2yF8AJJcItBwK5UYYbyGrArGlpbPqyIL";
 function queryCitiesInBetween(startCity, endCity, distancePerDay)
 {
-	var bp = getBreakPoint(startCity, endCity, distancePerDay);
+	getBreakPoint(startCity, endCity, distancePerDay);
 
 	//midpoint[0] is latitude, midpoint[1] is longitude
 	//var diffInLat = (c2[0]-c1[0]);
