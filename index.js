@@ -40,7 +40,8 @@ function find_cities(dep, dest){
 	var output = "";
 	// add each returned city
 	citylist.forEach(function(value){
-		var ret = '<div class="city" data-set="false" data-name=\''+value.name+'\'>'+value.name+'<button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
+		city = encodeURIComponent(value.name);
+		var ret = '<div class="city" data-set="false" data-name='+city+'>'+value.name+'<button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
 		output += ret;
 		//calculateAndDisplayRoute(value.name);
 	});
@@ -54,14 +55,14 @@ $(document).on('click', '.city', function(){
 
 	// if activities section is blank, run query!!
 	if (activities.text()==""){
-
 		var activitylist = getActivities(city.attr("data-name"));
+		if (activitylist!=-1){continue;}else{}
 		// [function call] returns array of activities
 		//var activitylist = ["swim", "camp", "drive", "ski"];
 		// list each activity in a city
-		$.each(activitylist, function(value){
+		activitylist.forEach(function(value){
 			// again, would like value to be a big ol object with time, price, details, etc
-			var ret = '<div class="activity">'+value+'</div>';
+			var ret = '<div class="activity">'+value.name+'</div>';
 			city.find(".activities").append(ret);
 		})
 	} else (console.log("not empty"));
@@ -85,7 +86,8 @@ $(document).on('click', '.add_city', function(){
 });
 
 function coord(cityName){
-    var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+cityName+"&key=AIzaSyAwe6XMoayWw_yOH48YW4zBNf2XGnyZYeo";
+	city = encodeURIComponent(cityName);
+    var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+city+"&key=AIzaSyAwe6XMoayWw_yOH48YW4zBNf2XGnyZYeo";
     var ret;
     jQuery.getJSON({
         url: url,
@@ -131,15 +133,20 @@ function getUserQueryModel(){
 }
 
 function getActivities(cityName) {
+	city=encodeURIComponent(cityName);
+	console.log(city);
 	var model_arr=[];
     var today = "2016-06-10"; // replace with function later
     var tmrw = "2016-06-12"; // replace with function later
-	var html = "http://terminal2.expedia.com:80/x/activities/search?location="+cityName+"&startDate="+today+"&endDate="+tmrw+"&apikey="+apikey;
+	var html = "http://terminal2.expedia.com:80/x/activities/search?location="+city+"&startDate="+today+"&endDate="+tmrw+"&apikey="+apikey;
 	console.log(html);
     jQuery.getJSON({
         url: html,
         async:false,
         success: function(data){
+        	if (data.status=="failed"){
+        		return -1;
+        	}
         	data = data.activities;
 	        var actModel;
 			for (i=0; i<data.length;i++){
@@ -151,7 +158,7 @@ function getActivities(cityName) {
 				actModel= {"name": name, "price": price, "dur": dur, "recScore": recScore, "img": img};
 				model_arr[i]=actModel;
 			}
-			console.log(model_arr);
+			//console.log(model_arr);
 			model_arr = sortActivities(model_arr);
 		}
     });
@@ -233,10 +240,11 @@ function sortAllCities(model_arr){
 }
 
 function getCheapestHotel(cityName){
+	city=encodeURIComponent(cityName);
 	var model_arr=[];
     var today = "2016-06-10"; // replace with function later
     var tmrw = "2016-06-11"; // replace with function later
-    var html = "http://terminal2.expedia.com:80/x/mhotels/search?city="+cityName+"&checkInDate=2016-12-01&checkOutDate=2016-12-03&room1=1&apikey="+apikey;
+    var html = "http://terminal2.expedia.com:80/x/mhotels/search?city="+city+"&checkInDate=2016-12-01&checkOutDate=2016-12-03&room1=1&apikey="+apikey;
     $.get(html,function(data,status){ //data is an array of JSON object
 		//parse an object
 		var hotelModel;
