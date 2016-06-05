@@ -37,20 +37,25 @@ $(document).ready(function(){
 
 function find_cities(dep, dest){
 	citylist = getCitiesInBetween(dep, dest);
-	console.log(citylist);
+	//console.log(citylist);
+/*yourArray.forEach( function (arrayItem)
+{
+    var x = arrayItem.prop1 + 2;
+    alert(x);
+});*/
 	// [function call] returns array of city models
 	//citylist = [{"name":"Montreal", "lat":"1","long":"1"},{"name":"Kingston", "lat":"1","long":"1"},{"name":"Toronto", "lat":"1","long":"1"}];
 
 	var output = "";
 	// add each returned city
-	$.each(citylist, function(index, value){
+	citylist.forEach(function(value){
+		console.log(value);
 		// ideally, value will be a big ol object with extra info and stuff
 		// like cheapest hotel, coordinates, region id, etc
 		// but right now, i am just assuming name
 		var ret = '<div class="city" data-index='+(index+1)+' data-set="false" data-name='+value.name+'>'+value.name+'<button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
 		output += ret;
 	})
-
 	return output;
 
 }
@@ -159,16 +164,18 @@ function getCitiesInBetween(startCity, endCity){
 	var model_arr=[];
 	$.get(html,function(data,status){ //data is an array of JSON object
 		//parse an object
+		//console.log(data);
 		var actModel;
 		for (i=0; i<data.length;i++){
-			var name = data[i].name;
-			var lat = data[i]["coordinates"][1];
-			var lon = data[i]["coordinates"][0];
-			var dis = getDistance(lat,lon,breakPoint[0],breakPoint[1])
+			var name = data[i]["name"];
+			//console.log(name);
+			var lat = data[i]["position"]["coordinates"][1];
+			var lon = data[i]["position"]["coordinates"][0];
+			var dis = calcCrow(lat,lon,breakPoint[0],breakPoint[1])
 			cityModel= {"name": name, "lat": lat, "lon": lon, "dis": dis};
 			model_arr[i]=cityModel;
 		}
-
+		sortAllCities();
 	});
 	return model_arr;
 }
@@ -185,10 +192,10 @@ function queryCitiesInBetween(startCity, endCity)
     return html1;
 }
 
-function sortAllCities(cityModels_arr){
+function sortAllCities(){
 	var firstModels=[]
 	//sort input cityModels
-	cityModels_arr.sort(function(a,b){
+	citylist.sort(function(a,b){
 		if (a.dis > b.dis){
 			return 1;
 		}
@@ -199,9 +206,10 @@ function sortAllCities(cityModels_arr){
 	});
 	//get the first 5 cityModels
 	for (i=0;i<5;i++){
-		firstModels[i]=cityModels_arr[i];
+		//console.log(citylist[i])
+		firstModels[i]=citylist[i];
 	}
-	return firstModels;
+	citylist = firstModels;
 
 }
 
@@ -242,30 +250,6 @@ function getHotelsForCities(cityModels_arr){
 	}
 	return cheapHotelModel_arr;
 }
-
-/*function getBreakPoint(startCity, endCity)
-{
-    //c1[0] is latitude, c1[1] is longitude
-    var c1 = coord(startCity);
-    var c2 = coord(endCity);
-    //var c1 = [48.85, 2.35];
-    //var c2 = [41.89, 12.48];
-    var radlat1 = Math.PI * c1[0]/180;
-    var radlat2 = Math.PI * c1[1]/180;
-    var theta = c1[1] - c2[1];
-    var radtheta = Math.PI * theta/180;
-    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-    dist = Math.acos(dist);
-    dist = dist * 180/Math.PI;
-    dist = dist * 60 * 1.1515;
-    dist = dist * 1.609344;    
-    var times = dist/distancePerDay;
-    var bpLat = c1[0]+(c2[0]-c1[0])/times;
-    var bpLng = c1[1]+(c2[1]-c1[1])/times;
-    bpLat = bpLat.toFixed(3);
-    bpLng = bpLng.toFixed(3);
-    breakPoint = [bpLat, bpLng];
-}*/
 
 
 function getBreakPoint(startCity, endCity){
