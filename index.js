@@ -41,7 +41,8 @@ function find_cities(dep, dest){
 	// add each returned city
 	citylist.forEach(function(value){
 		city = encodeURIComponent(value.name);
-		var ret = '<div class="city" data-set="false" data-name='+city+'>'+value.name+'<button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
+		var hotel = getCheapestHotel(city);
+		var ret = '<div class="city" data-set="false" data-name='+city+'>'+value.name+'<h2>$'+hotel.price+'</h2><button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
 		output += ret;
 		//calculateAndDisplayRoute(value.name);
 	});
@@ -232,30 +233,30 @@ function sortAllCities(model_arr){
 }
 
 function getCheapestHotel(cityName){
-	city=encodeURIComponent(cityName);
+	//city=encodeURIComponent(cityName);
 	var model_arr=[];
     var today = "2016-06-10"; // replace with function later
     var tmrw = "2016-06-11"; // replace with function later
     var html = "http://terminal2.expedia.com:80/x/mhotels/search?city="+city+"&checkInDate=2016-12-01&checkOutDate=2016-12-03&room1=1&apikey="+apikey;
-    $.get(html,function(data,status){ //data is an array of JSON object
-		//parse an object
-		var hotelModel;
-		for (i=0; i<data.length;i++){
-			var name = data[i].name;
-			var price = data[i].price;
-			
-			hotelModel= {"name": name, "price": price};
-			model_arr[i]=hotelModel;
-		}
-	});
-	model_arr.sort(function(a,b){
-		if (a.price > b.price){
-			return 1;
-		}
-		if (a.price > b.price){
-			return -1;
-		}
-		return 0;
+    //console.log(html);
+    $.get({
+    	url: html,
+    	async:false,
+    	success: function(data){
+			data = data.hotelList;
+			//parse an object
+			var hotelModel;
+			for (i=0; i<data.length;i++){
+				var name = data[i].name;
+				var price = data[i].lowRate;
+				//console.log(hotelModel);
+				hotelModel= {"name": name, "price": price};
+				model_arr[i]=hotelModel;
+			}
+			model_arr.sort(function(a,b){
+				return a.price-b.price;
+			});
+    	}
 	});
 	return model_arr[0];
 }
