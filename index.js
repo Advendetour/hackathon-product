@@ -101,8 +101,8 @@ function getBreakPoint(startCity, endCity, distancePerDay)
 	dist = dist * 1.609344;
 
 	var times = dist/distancePerDay;
-	var bpLat = (c1[0] + times * c2[0])/(1+times);
-	var bpLng = (c1[1] + times * c2[1])/(1+times);
+    var bpLat = c1[0]+(c2[0]-c1[0])/times;
+    var bpLng = c1[1]+(c2[1]-c1[1])/times;
 	bpLat = bpLat.toFixed(3);
 	bpLng = bpLng.toFixed(3);
 	breakPoint = [bpLat, bpLng];
