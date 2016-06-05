@@ -56,15 +56,16 @@ $(document).on('click', '.city', function(){
 	// if activities section is blank, run query!!
 	if (activities.text()==""){
 		var activitylist = getActivities(city.attr("data-name"));
-		if (activitylist!=-1){continue;}else{}
-		// [function call] returns array of activities
-		//var activitylist = ["swim", "camp", "drive", "ski"];
-		// list each activity in a city
-		activitylist.forEach(function(value){
-			// again, would like value to be a big ol object with time, price, details, etc
-			var ret = '<div class="activity">'+value.name+'</div>';
-			city.find(".activities").append(ret);
-		})
+		if (activitylist=="-1"){
+			city.find(".activities").append("No activities could be found in this region.");
+		}else{
+			// list each activity in a city
+			activitylist.forEach(function(value){
+				// again, would like value to be a big ol object with time, price, details, etc
+				var ret = '<div class="activity">'+value.name+'</div>';
+				city.find(".activities").append(ret);
+			})
+		}
 	} else (console.log("not empty"));
 	activities.slideToggle();
 
@@ -80,6 +81,7 @@ $(document).on('click', '.add_city', function(){
 	// now find the new set of cities!
 	//console.log(p.attr("data-name"));
 	var output = find_cities(p.attr("data-name"),destcity);
+	$(".activities").hide();
 	p.after(output);
 	//console.log(output);
 
@@ -114,7 +116,6 @@ function difflatlong(city1,city2){
 
   var result = [lat,long];
   return result;
-
 }
 
 function totaldiff(city1,city2) {
@@ -145,26 +146,28 @@ function getActivities(cityName) {
         async:false,
         success: function(data){
         	if (data.status=="failed"){
-        		return -1;
-        	}
-        	data = data.activities;
-	        var actModel;
-			for (i=0; i<data.length;i++){
-				var name = data[i].title;
-				var price = data[i].fromPrice;
-				var dur = data[i].duration;
-				var recScore = data[i].recommendationScore;
-				var img = data[i].imageUrl;
-				actModel= {"name": name, "price": price, "dur": dur, "recScore": recScore, "img": img};
-				model_arr[i]=actModel;
+        		model_arr = -1;
+        	} else {
+	        	data = data.activities;
+		        var actModel;
+				for (i=0; i<data.length;i++){
+					var name = data[i].title;
+					var price = data[i].fromPrice;
+					var dur = data[i].duration;
+					var recScore = data[i].recommendationScore;
+					var img = data[i].imageUrl;
+					actModel= {"name": name, "price": price, "dur": dur, "recScore": recScore, "img": img};
+					model_arr[i]=actModel;
+				}
+				//console.log(model_arr);
+				model_arr = sortActivities(model_arr);
 			}
-			//console.log(model_arr);
-			model_arr = sortActivities(model_arr);
 		}
     });
 
 	return model_arr;
 }
+
 function sortActivities(model_arr){
 	var firstModels=[]
 	//sort input cityModels
@@ -177,7 +180,6 @@ function sortActivities(model_arr){
 		firstModels[i]=model_arr[i];
 	}
 	return firstModels;
-
 }
 
 function getCitiesInBetween(startCity, endCity){
@@ -205,8 +207,7 @@ function getCitiesInBetween(startCity, endCity){
 	return model_arr;
 }
 
-function queryCitiesInBetween(startCity, endCity)
-{
+function queryCitiesInBetween(startCity, endCity){
     getBreakPoint(startCity, endCity);    //midpoint[0] is latitude, midpoint[1] is longitude
     //var diffInLat = (c2[0]-c1[0]);
     //var diffInLng = (c2[1]-c1[1]);
@@ -222,21 +223,12 @@ function sortAllCities(model_arr){
 	//sort input cityModels
 	model_arr.sort(function(a,b){
 		return b.dis-a.dis;
-/*		if (a.dis > b.dis){
-			return 1;
-		}
-		if (a.dis > b.dis){
-			return -1;
-		}
-		return 0;*/
 	});
 	//get the first 5 cityModels
 	for (i=0;i<5;i++){
-		//console.log(citylist[i])
 		firstModels[i]=model_arr[i];
 	}
 	return firstModels;
-
 }
 
 function getCheapestHotel(cityName){
@@ -277,7 +269,6 @@ function getHotelsForCities(cityModels_arr){
 	}
 	return cheapHotelModel_arr;
 }
-
 
 function getBreakPoint(startCity, endCity){
 	var c1 = coord(startCity);
