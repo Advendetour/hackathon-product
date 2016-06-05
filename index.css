@@ -1,17 +1,27 @@
-h1 { color: white; font-family: 'Helvetica Neue', sans-serif; font-size: 70px; font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: center; }
-h2{    
+h1 {
+	color: white;
+	font-family: 'Helvetica Neue',
+	sans-serif; font-size: 70px;
+	font-weight: bold;
+	letter-spacing: -1px;
+	line-height: 1;
+	text-align: center;
+}
+.hotel{    
 	font-size: 1em;
 	display: inline;
 	margin-left: 10px;
 }
-h3{
-	font-size: .7em;
-	display: inline;
-	margin-left: 10px;
+.mini{
+	font-size:0.6em;
 }
 #toplevel {
 	color: white;
-	font-family: 'Helvetica Neue', sans-serif; font-size: 20px; font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: center;
+	font-family: 'Helvetica Neue', sans-serif; font-size: 1.4em;
+	font-weight: bold;
+	letter-spacing: -1px;
+	line-height: 1;
+	text-align: center;
 }
 
 .city {
@@ -20,7 +30,7 @@ h3{
 	margin: 20px;
 	padding: 10px;
 
-	font-family: 'Enriqueta', arial, serif; line-height: 1.25; margin: 0 0 10px; font-size: 30px; font-weight: bold;
+	font-family: 'Enriqueta', arial, serif; line-height: 1.25; margin: 0 0 10px; font-size: 1em; font-weight: bold;
 	color: white;
 }
 .activity{
@@ -29,7 +39,7 @@ h3{
 	margin: 10px;
 	padding: 5px;
 	left: 20px;
-	font-family: 'Enriqueta', arial, serif; line-height: 1.25; margin: 0 0 10px; font-size: 20px; font-weight: bold;
+	font-family: 'Enriqueta', arial, serif; line-height: 1.25; margin: 0 0 10px; font-size: 1em; font-weight: bold;
 	color: #363636;
 	background-position: right center;
 	background-repeat: no-repeat;

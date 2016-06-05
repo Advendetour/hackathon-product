@@ -43,7 +43,7 @@ function find_cities(dep, dest){
 	citylist.forEach(function(value){
 		city = encodeURIComponent(value.name);
 		var hotel = getCheapestHotel(city);
-		var ret = '<div class="city" data-set="false" data-name='+city+'>'+value.name+'<h2>$'+hotel.price+'</h2><button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
+		var ret = '<div class="city" data-set="false" data-name='+city+'>'+value.name+'<span class="hotel">$'+hotel.price+'<span class="mini"> (one night hotel)</span></span><button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
 		output += ret;
 		//calculateAndDisplayRoute(value.name);
 	});
@@ -64,7 +64,7 @@ $(document).on('click', '.city', function(){
 			// list each activity in a city
 			activitylist.forEach(function(value){
 				// again, would like value to be a big ol object with time, price, details, etc
-				var ret = '<div class="activity" style="background-image:url(http:'+value.img+');">'+value.name+'<h3>'+value.price+'</h3></div>';
+				var ret = '<div class="activity" style="background-image:url(http:'+value.img+');">'+value.name+", "+value.price+'</div>';
 
 				city.find(".activities").append(ret);
 			})
@@ -84,7 +84,7 @@ $(document).on('click', '.add_city', function(){
 	// now find the new set of cities!
 	//console.log(p.attr("data-name"));
 	var output = find_cities(p.attr("data-name"),destcity);
-	$(".activities").hide();
+	$(".activities").slideUp(); // look into this!
 	p.after(output);
 	//console.log(output);
 });
