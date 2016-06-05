@@ -1,8 +1,18 @@
+h1 { color: white; font-family: 'Helvetica Neue', sans-serif; font-size: 70px; font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: center; }
+
+#toplevel {
+	color: white;
+	font-family: 'Helvetica Neue', sans-serif; font-size: 30px; font-weight: bold; letter-spacing: -1px; line-height: 1; text-align: center;
+}
+
 .city {
 	border-radius: 10px;
 	background: grey;
 	margin: 20px;
 	padding: 10px;
+
+	font-family: 'Enriqueta', arial, serif; line-height: 1.25; margin: 0 0 10px; font-size: 30px; font-weight: bold;
+	color: white;
 }
 .activity{
 	border-radius: 10px;
@@ -10,9 +20,20 @@
 	margin: 10px;
 	padding: 5px;
 	left: 20px;
+	font-family: 'Enriqueta', arial, serif; line-height: 1.25; margin: 0 0 10px; font-size: 20px; font-weight: bold;
+
 }
 .add_city{
 }
+
 .city[data-set="true"]{
-	background: blue;
+	background: #0A4958;
+}
+
+html { 
+  background: url("../AngelTrips/blurblue.jpg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
 }
