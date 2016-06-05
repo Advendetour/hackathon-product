@@ -5,17 +5,18 @@ var newAct;
 var i;
 var apikey= "NH6oq54KA957fmLpv3x1pFx8CE1xhRoc";
 var breakPoint =[0,0];
-
+var depcity;
+var destcity;
 
 $(document).ready(function(){
 	// start the search by finding 5 cities between the start and end destinations
 	$("#start_search").click(function(){
 		$("#cities").html("");
-		var depcity = $("#dep_city").val();
-		var destcity = $("#dest_city").val();
+		depcity = $("#dep_city").val();
+		destcity = $("#dest_city").val();
 
 		// add starting city first
-		var ret = '<div class="city" data-index=0 data-set="true" data-name='+depcity+'>'+depcity+'<div class="activities"></div></div>';
+		var ret = '<div class="city" data-set="true" data-name='+depcity+'>'+depcity+'<div class="activities"></div></div>';
 		$("#cities").append(ret);
 
 		// find and display mid cities
@@ -23,8 +24,7 @@ $(document).ready(function(){
 		$("#cities").append(output);
 
 		// finally add destination city
-		var lastindex = citylist.length;
-		var ret = '<div class="city" data-index='+(lastindex+1)+' data-set="true" data-name='+destcity+'>'+destcity+'<div class="activities"></div></div>';
+		var ret = '<div class="city" data-set="true" data-name='+destcity+'>'+destcity+'<div class="activities"></div></div>';
 		$("#cities").append(ret);
 
 		// lastly, hide all activities section so toggle() works later
@@ -42,6 +42,7 @@ function find_cities(dep, dest){
 	citylist.forEach(function(value){
 		var ret = '<div class="city" data-set="false" data-name='+value.name+'>'+value.name+'<button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
 		output += ret;
+		//calculateAndDisplayRoute(value.name);
 	});
 	return output;
 }
@@ -63,6 +64,20 @@ $(document).on('click', '.city', function(){
 		})
 	} else (console.log("not empty"));
 	activities.slideToggle();
+
+});
+
+// on click of city tab, query or toggle display of related activities
+$(document).on('click', '.add_city', function(){
+	// keep chosen city and remove others
+	var p = $(this).parent();
+	$(this).hide();
+	p.attr("data-set", "true");
+	$(".city[data-set='false']").slideUp();
+	// now find the new set of cities!
+	console.log(p.attr("data-name"),+","+destcity);
+	//var output = find_cities(p.attr("data-name"),destcity);
+	//console.log(output);
 
 });
 
@@ -105,8 +120,6 @@ function totaldiff(city1,city2) {
 }
 
 
-
-
 function getUserQueryModel(){
 	var start = $("#dep_city").val();
 	var end = $("#dest_city").val();
@@ -115,25 +128,29 @@ function getUserQueryModel(){
 	return trip;
 }
 
-
 function getActivities(cityName) {
 	var model_arr=[];
     var today = "2016-06-10"; // replace with function later
     var tmrw = "2016-06-12"; // replace with function later
 	var html = "http://terminal2.expedia.com:80/x/activities/search?location="+cityName+"&startDate="+today+"&endDate="+tmrw+"&apikey="+apikey;
-	$.get(html,function(data,status){ //data is an array of JSON object
-		//parse an object
-		var actModel;
-		for (i=0; i<data.length;i++){
-			var name = data[i].title;
-			var price = data[i].fromPrice;
-			var dur = data[i].duration;
-			var recScore = data[i].recommendationScore;
-			var img = data[i].imageUrl;
-			actModel= {"name": name, "price": price, "dur": dur, "recScore": recScore, "img": img};
-			model_arr[i]=actModel;
+	
+    jQuery.getJSON({
+        url: html,
+        async:false,
+        success: function(data){
+	        var actModel;
+			for (i=0; i<data.length;i++){
+				var name = data[i].title;
+				var price = data[i].fromPrice;
+				var dur = data[i].duration;
+				var recScore = data[i].recommendationScore;
+				var img = data[i].imageUrl;
+				actModel= {"name": name, "price": price, "dur": dur, "recScore": recScore, "img": img};
+				model_arr[i]=actModel;
+			}
 		}
-	})
+    });
+
 	return model_arr;
 }
 
