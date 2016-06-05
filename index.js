@@ -66,3 +66,18 @@ function coord(cityName){
     });
     return ret;
 }
+
+function difflatlong(city1,city2){
+  var lat;
+  var long;
+
+  var difflat = coord(city2)[0] - coord(city1)[0]
+  var lat = difflat * 110.574;
+
+  var difflong = coord(city2)[1] - coord(city1)[1];
+  var long = difflong * 111.320 * Math.cos(lat/(2 * Math.PI));
+
+  var result = [lat,long];
+  return result;
+
+}
