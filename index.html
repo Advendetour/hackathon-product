@@ -22,9 +22,7 @@
 
 <div id="map"></div>
 <div id="directions_panel"></div>
-<br><br><br><br><br>
-<br><br><br><br><br>
-<br><br><br><br><br>
+<br><br>
 <div id="cities">
 </div>
 
@@ -50,6 +48,9 @@
 			calculateAndDisplayRoute(directionsService,directionsDisplay);
 
 		});
+		$(document).on('click', '.add_city', function(){
+			calculateAndDisplayRoute(directionsService,directionsDisplay);
+		});
 
 	}
 
@@ -70,7 +71,7 @@
 			var coords = coord(city);
 			var loc = new google.maps.LatLng(coords[0],coords[1]);
 			wypts= {location: loc, stopover: true};
-			bypass[i]=wypts;
+			bypass[i-1]=wypts;
 		}
 		
 		

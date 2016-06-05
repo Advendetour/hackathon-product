@@ -86,7 +86,6 @@ $(document).on('click', '.add_city', function(){
 	$(".activities").hide();
 	p.after(output);
 	//console.log(output);
-
 });
 
 function coord(cityName){
