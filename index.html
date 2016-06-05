@@ -2,19 +2,21 @@
 <html>
 <head>
 	<script src="jquery-1.12.4.min.js"></script>
-	<script src="./index.js"></script> 
+	<script src="./index.js"></script>
+	<link rel="stylesheet" type="text/css" href="./index.css">
 </head>
 <body>
 
 <h1>Welcome to Angel Trips!</h1>
 
-<input type="text" name="dep_city" id="dep_city"> Departure City
-<br>
-<input type="text" name="dest_city" id="dest_city"> Destination City
-<br>
-<!-- <button type="button" onclick="find_start()">Find</button>-->
-<button type="button" id="find">Find</button>
+<div id="toplevel">
+	<input type="text" name="dep_city" id="dep_city"> Departure City<br>
+	<input type="text" name="dest_city" id="dest_city"> Destination City<br>
+	<button type="button" id="start_search">Start your journey</button>
+</div>
 
-<div id="results"></div>
+<div id="cities">
+</div>
+
 </body>
 </html>

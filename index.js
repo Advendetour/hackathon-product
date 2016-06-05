@@ -1,30 +1,52 @@
-var apikey = "kRAwQaC1k0hxXZM2G2CfOJbgndiqGv8E";
-function find_start() {
-    //
-    var city = document.getElementById("dep_city").value;
-    city = encodeURI(city);
-    var today = "2016-06-10"; // replace with function later
-    var tmrw = "2016-06-12"; // replace with function later
-    var beds = "1";
-	var html = "http://terminal2.expedia.com/x/mhotels/search?city="+city+"&checkInDate="+today+"&checkOutDate="+tmrw+"&room1="+beds+"&apikey="+apikey;
-	//console.log(html);
-	return html;
-
-}
-
 $(document).ready(function(){
-    $("#find").click(function(){
-        var html = find_start();
-        console.log(html);
-	    $.get(html, function(data, status){
-	    	//console.log(data);
-			$("#results").text(JSON.stringify(data));
-	    });
-    });
-}); 
+	// start the search by finding 5 cities between the start and end destinations
+	$("#start_search").click(function(){
 
-/*$("button").click(function(){
-    $.get("demo_test.asp", function(data, status){
-        alert("Data: " + data + "\nStatus: " + status);
-    });
-}); */
+		// [function call] returns array of cities
+		var citylist = ["Montreal", "Kingston", "Toronto"];
+
+		// add starting city first
+		var depcity = $("#dep_city").val();
+		var ret = '<div class="city">'+depcity+'<div class="activities"></div></div>';
+		$("#cities").append(ret);
+
+		// add each returned city
+		$.each(citylist, function(index, value){
+			// ideally, value will be a big ol object with extra info and stuff
+			// like cheapest hotel, coordinates, region id, etc
+			// but right now, i am just assuming name
+			var ret = '<div class="city">'+value+'<div class="activities"></div></div>';
+			$("#cities").append(ret);
+		})
+
+		// finally add destination city
+		var destcity = $("#dest_city").val();
+		var ret = '<div class="city">'+destcity+'<div class="activities"></div></div>';
+		$("#cities").append(ret);
+
+		$(".activities").hide();
+	});
+
+});
+
+//functions for dynamic/new doms
+
+// on click of city tab, query or toggle display of related activities
+$(document).on('click', '.city', function(){
+	var city = $(this);
+	var activities = city.find(".activities");
+	
+	// if activities section is blank, run query!!
+	if (activities.text()==""){
+		// [function call] returns array of activities
+		var activitylist = ["swim", "camp", "drive", "ski"];
+		// list each activity in a city
+		$.each(activitylist, function(index, value){
+			// again, would like value to be a big ol object with time, price, details, etc
+			var ret = '<div class="activity">'+value+'</div>';
+			city.find(".activities").append(ret);
+		})
+	} else (console.log("not empty"));
+	activities.slideToggle();
+
+});
