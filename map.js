@@ -1,48 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<script src="jquery-1.12.4.min.js"></script>
-	<script src="./index.js"></script>
-	<script src="./map.js"></script>
-	<script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5LyIEhdrka55mYbw5pIHSwDyA-FR82gw&callback=initMap"></script>
-	<link rel="stylesheet" type="text/css" href="./index.css">
-</head>
-<body>
-
-<h1>Welcome to Angel Trips!</h1>
-
-<div id="toplevel">
-	Departure City
-	<input type="text" name="dep_city" id="dep_city">
-	Destination City
-	<input type="text" name="dest_city" id="dest_city">
-	<br>How far would you like to travel per day?
-	<input type="text" name="distance_per_day" id="distance_per_day"> Km
-	<br><br>
-	<button type="button" id="start_search">Start your journey</button>
-	<button type="button" id="end_search">Finalize your journey</button>
-	<br><br><br><br><br><br><br><br><br><br><br><br>
-
-</div>
-
-<div id="map"></div>
-<div id="directions_panel"></div>
-<!-- <table>
-	<tr>
-		<td id="cities">
-			OPTIONS
-		</td>
-		<td>
-			ITINERARY
-		</td>
-	</tr>
-</table> -->
-
-<div id="cities">
-</div>
-
-<script>
 
 	function initMap() {
 		
@@ -115,7 +70,3 @@
                     }
                 });
             }
-</script>
-
-</body>
-</html>

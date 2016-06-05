@@ -22,6 +22,8 @@ h2{}
 	left: 20px;
 	font-family: 'Enriqueta', arial, serif; line-height: 1.25; margin: 0 0 10px; font-size: 20px; font-weight: bold;
 	color: #363636;
+	background-position: right center;
+	background-repeat: no-repeat;
 }
 .add_city{
 	float: right;
@@ -30,11 +32,19 @@ h2{}
 .city[data-set="true"]{
 	background: #0A4958;
 }
-
 html { 
   background: url("../AngelTrips/blurblue.jpg") no-repeat center center fixed; 
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+}
+
+#map{
+		position: absolute;
+		left: 400px;
+        margin: auto;
+        width: 500px;
+        height: 300px;
+        background-color: #CCC;
 }

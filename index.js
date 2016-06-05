@@ -17,7 +17,7 @@ $(document).ready(function(){
 		distancePerDay = $("#distance_per_day").val();
 
 		// add starting city first
-		var ret = '<div class="city" data-set="true" data-name='+depcity+'>'+depcity+'<div class="activities"></div></div>';
+		var ret = '<div class="city" data-set="true" data-name='+depcity+'>'+depcity+", "+stateCountry(depcity)[0]+", "+stateCountry(depcity)[1]+'<div class="activities"></div></div>';
 		$("#cities").append(ret);
 
 		// find and display mid cities
@@ -25,7 +25,7 @@ $(document).ready(function(){
 		$("#cities").append(output);
 
 		// finally add destination city
-		var ret = '<div class="city" data-set="true" data-name='+destcity+'>'+destcity+'<div class="activities"></div></div>';
+		var ret = '<div class="city" data-set="true" data-name='+destcity+'>'+destcity+", "+stateCountry(destcity)[0]+", "+stateCountry(destcity)[1]+'<div class="activities"></div></div>';
 		$("#cities").append(ret);
 
 		// lastly, hide all activities section so toggle() works later
@@ -64,7 +64,8 @@ $(document).on('click', '.city', function(){
 			// list each activity in a city
 			activitylist.forEach(function(value){
 				// again, would like value to be a big ol object with time, price, details, etc
-				var ret = '<div class="activity">'+value.name+'</div>';
+				var ret = '<div class="activity" style="background-image:url(http:'+value.img+');">'+value.name+'<h3>'+value.price+'</h3></div>';
+
 				city.find(".activities").append(ret);
 			})
 		}
@@ -106,6 +107,28 @@ function coord(cityName){
     return ret;
 }
 
+function stateCountry(cityName){
+	city = encodeURIComponent(cityName);
+    var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+city+"&key=AIzaSyAwe6XMoayWw_yOH48YW4zBNf2XGnyZYeo";
+    var ret;
+    jQuery.getJSON({
+        url: url,
+        async:false,
+        success: function(result){
+					var reslength = result.results[0].address_components.length;
+					for (i=0;i<reslength;i++){
+						if (result.results[0].address_components[i].types[0] == "country"){
+							var state = result.results[0].address_components[i-1].long_name;
+	            var country = result.results[0].address_components[i].long_name;
+	            var result = [state,country];
+	            ret = result;
+						}
+					}
+        }
+    });
+    return ret;
+}
+
 function difflatlong(city1,city2){
   var lat;
   var long;
@@ -142,7 +165,7 @@ function getActivities(cityName) {
     var today = "2016-06-10"; // replace with function later
     var tmrw = "2016-06-12"; // replace with function later
 	var html = "http://terminal2.expedia.com:80/x/activities/search?location="+city+"&startDate="+today+"&endDate="+tmrw+"&apikey="+apikey;
-	console.log(html);
+	//console.log(html);
     jQuery.getJSON({
         url: html,
         async:false,
@@ -213,7 +236,7 @@ function queryCitiesInBetween(startCity, endCity){
     getBreakPoint(startCity, endCity);    //midpoint[0] is latitude, midpoint[1] is longitude
     //var diffInLat = (c2[0]-c1[0]);
     //var diffInLng = (c2[1]-c1[1]);
-    //var midpoint = [(diffInLat/2)+c1[0],(diffInLng/2)+c1[1]];    
+    //var midpoint = [(diffInLat/2)+c1[0],(diffInLng/2)+c1[1]];
     var radiusInKm = Math.min(distancePerDay, 100);
     var html1 = "http://terminal2.expedia.com/x/geo/features?within="+radiusInKm+"km&lat="+breakPoint[0]+"&lng="+breakPoint[1]+"&type=city&apikey="+apikey;
     //return html1;
@@ -239,6 +262,7 @@ function getCheapestHotel(cityName){
     var today = "2016-06-10"; // replace with function later
     var tmrw = "2016-06-11"; // replace with function later
     var html = "http://terminal2.expedia.com:80/x/mhotels/search?city="+city+"&checkInDate=2016-12-01&checkOutDate=2016-12-03&room1=1&apikey="+apikey;
+<<<<<<< Updated upstream
     //console.log(html);
     $.get({
     	url: html,
@@ -258,6 +282,27 @@ function getCheapestHotel(cityName){
 				return a.price-b.price;
 			});
     	}
+=======
+    $.get(html,function(data,status){ //data is an array of JSON object
+		//parse an object
+		var hotelModel;
+		for (i=0; i<data.length;i++){
+			var name = data[i].name;
+			var price = data[i].price;
+
+			hotelModel= {"name": name, "price": price};
+			model_arr[i]=hotelModel;
+		}
+	});
+	model_arr.sort(function(a,b){
+		if (a.price > b.price){
+			return 1;
+		}
+		if (a.price > b.price){
+			return -1;
+		}
+		return 0;
+>>>>>>> Stashed changes
 	});
 	return model_arr[0];
 }
@@ -293,8 +338,8 @@ function calcCrow(lat1, lon1, lat2, lon2) {
 	var lat2 = toRad(lat2);
 
 	var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-	Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2); 
-	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 	var d = R * c;
 	return d;
 }
