@@ -35,7 +35,7 @@ $(document).ready(function(){
 $(document).on('click', '.city', function(){
 	var city = $(this);
 	var activities = city.find(".activities");
-	
+
 	// if activities section is blank, run query!!
 	if (activities.text()==""){
 		// [function call] returns array of activities
@@ -50,3 +50,19 @@ $(document).on('click', '.city', function(){
 	activities.slideToggle();
 
 });
+
+function coord(cityName){
+    var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+cityName+"&key=AIzaSyAwe6XMoayWw_yOH48YW4zBNf2XGnyZYeo";
+    var ret;
+    $.getJSON({
+        url: url,
+        async:false,
+        success: function(result){
+            var lat = result.results[0].geometry.location.lat;
+            var long = result.results[0].geometry.location.lng;
+            var result = [lat,long];
+            ret = result;
+        }
+    });
+    return ret;
+}
