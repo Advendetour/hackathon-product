@@ -1,68 +1,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+	<script src="jquery-1.12.4.min.js"></script>
+	<script src="./index.js"></script> 
 </head>
 <body>
-	<h1>Welcome to Angel Trips!</h1>
 
-	<h3>Enter:</h3>
-	<p>Start City</p>
-	<input name="dep_city" type="text" > <br/>
-	<p>End City</p>
-	<input name="dest_city" type="text" > <br/>
-	<p>Duration(days):</p><input name="duration" type="text">
-	<button type="submit" value="submit" >Get Route</button>
+<h1>Welcome to Angel Trips!</h1>
 
-	<div class = "updateTime" style="display:none">
-		<p>Time left for your trip: @</p>
-	</div>
+<input type="text" name="dep_city" id="dep_city"> Departure City
+<br>
+<input type="text" name="dest_city" id="dest_city"> Destination City
+<br>
+<!-- <button type="button" onclick="find_start()">Find</button>-->
+<button type="button" id="find">Find</button>
 
-	<div id="updateActivity" style="display:none">
-		<p>startCity</p>
-		<table id="tableDisplay">
-
-		</table>
-		<p>EndCity</p>
-	</div>
-	
-
-	<script>
-	var newModel=getUserQueryModel();
-	var newAct;
-	var i;
-	var display = queryForAllCities(newModel["start"], newModel["end"]);
-	var out="<tr><td>"+newModel["start"]+"</td></tr>";
-
-
-	$(document).ready(function(){
-		
-		$(".tr").click(function(){
-			var actName=$(this).text();
-			display=queryForAllCities(newModel["start"], newModel["end"]);
-			$("#updateTime").show()
-			$("#updateActivity").show()
-		});
-	});
-
-
-	function appendTable(sel){
-		for(i=0;i<display.length;i++){
-			newAct+= "<tr><tr id=\"" +display[i].name+"\">"+ display[i].name +"</td></tr>"
-		}
-		$(sel).appendChild(newAct);
-	}
-	
-	//display activities in table
-	function displayTable(sel){
-		for(i=0;i<display.length;i++){
-			out+= "<tr><tr id=\"" +display[i].name+"\">"+ display[i].name +"</td></tr>"
-		}
-		out+="<tr><td>"+endCity+"</td></tr>"
-		$(sel).text = out;
-	}
-	
-
-	</script>
+<div id="results"></div>
 </body>
 </html>
