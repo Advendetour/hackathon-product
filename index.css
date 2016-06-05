@@ -15,4 +15,14 @@
 }
 .city[data-set="true"]{
 	background: blue;
+	color: white;
+}
+
+#map{
+	width: 500px;
+	height: 300px;
+	z-index: 9;
+	background-color: #CCC;
+	position: relative;
+	margin: auto;
 }
