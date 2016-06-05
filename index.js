@@ -63,7 +63,8 @@ $(document).on('click', '.city', function(){
 			// list each activity in a city
 			activitylist.forEach(function(value){
 				// again, would like value to be a big ol object with time, price, details, etc
-				var ret = '<div class="activity">'+value.name+'</div>';
+				var ret = '<div class="activity" style="background-image:url(http:'+value.img+');">'+value.name+'<h3>'+value.price+'</h3></div>';
+
 				city.find(".activities").append(ret);
 			})
 		}
@@ -163,7 +164,7 @@ function getActivities(cityName) {
     var today = "2016-06-10"; // replace with function later
     var tmrw = "2016-06-12"; // replace with function later
 	var html = "http://terminal2.expedia.com:80/x/activities/search?location="+city+"&startDate="+today+"&endDate="+tmrw+"&apikey="+apikey;
-	console.log(html);
+	//console.log(html);
     jQuery.getJSON({
         url: html,
         async:false,
