@@ -11,3 +11,8 @@
 	padding: 5px;
 	left: 20px;
 }
+.add_city{
+}
+.city[data-set="true"]{
+	background: blue;
+}
