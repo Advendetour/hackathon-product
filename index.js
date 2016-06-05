@@ -54,10 +54,12 @@ $(document).on('click', '.city', function(){
 
 	// if activities section is blank, run query!!
 	if (activities.text()==""){
+
+		var activitylist = getActivities(city.attr("data-name"));
 		// [function call] returns array of activities
-		var activitylist = ["swim", "camp", "drive", "ski"];
+		//var activitylist = ["swim", "camp", "drive", "ski"];
 		// list each activity in a city
-		$.each(activitylist, function(index, value){
+		$.each(activitylist, function(value){
 			// again, would like value to be a big ol object with time, price, details, etc
 			var ret = '<div class="activity">'+value+'</div>';
 			city.find(".activities").append(ret);
@@ -141,21 +143,35 @@ function getActivities(cityName) {
         	data = data.activities;
 	        var actModel;
 			for (i=0; i<data.length;i++){
-				var name = data.activities[i].title;
-				var price = data.activities[i].fromPrice;
-				var dur = data.activities[i].duration;
-				var recScore = data.activities[i].recommendationScore;
-				var img = data.activities[i].imageUrl;
+				var name = data[i].title;
+				var price = data[i].fromPrice;
+				var dur = data[i].duration;
+				var recScore = data[i].recommendationScore;
+				var img = data[i].imageUrl;
 				actModel= {"name": name, "price": price, "dur": dur, "recScore": recScore, "img": img};
-				console.log(actModel);
 				model_arr[i]=actModel;
 			}
+			console.log(model_arr);
+			model_arr = sortActivities(model_arr);
 		}
     });
 
 	return model_arr;
 }
+function sortActivities(model_arr){
+	var firstModels=[]
+	//sort input cityModels
+	model_arr.sort(function(a,b){
+		return b.recScore-a.recScore;
+	});
+	//get the first 5 cityModels
+	for (i=0;i<5;i++){
+		//console.log(citylist[i])
+		firstModels[i]=model_arr[i];
+	}
+	return firstModels;
 
+}
 
 function getCitiesInBetween(startCity, endCity){
 
@@ -198,13 +214,14 @@ function sortAllCities(model_arr){
 	var firstModels=[]
 	//sort input cityModels
 	model_arr.sort(function(a,b){
-		if (a.dis > b.dis){
+		return b.dis-a.dis;
+/*		if (a.dis > b.dis){
 			return 1;
 		}
 		if (a.dis > b.dis){
 			return -1;
 		}
-		return 0;
+		return 0;*/
 	});
 	//get the first 5 cityModels
 	for (i=0;i<5;i++){
