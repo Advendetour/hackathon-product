@@ -1,5 +1,5 @@
 var citylist;
-
+var distancePerDay = 400;
 $(document).ready(function(){
 	// start the search by finding 5 cities between the start and end destinations
 	$("#start_search").click(function(){
@@ -12,7 +12,7 @@ $(document).ready(function(){
 		$("#cities").append(ret);
 
 		// find and display mid cities
-		var output = find_cities($("#dep_city"), $("#dest_city"));
+		var output = find_cities(depcity, destcity);
 		$("#cities").append(output);
 
 		// finally add destination city
@@ -29,9 +29,10 @@ $(document).ready(function(){
 });
 
 function find_cities(dep, dest){
-
+	citylist = getCitiesInBetween(dep, dest);
+	console.log(citylist);
 	// [function call] returns array of city models
-	citylist = [{"name":"Montreal", "lat":"1","long":"1"},{"name":"Kingston", "lat":"1","long":"1"},{"name":"Toronto", "lat":"1","long":"1"}];
+	//citylist = [{"name":"Montreal", "lat":"1","long":"1"},{"name":"Kingston", "lat":"1","long":"1"},{"name":"Toronto", "lat":"1","long":"1"}];
 
 	var output = "";
 	// add each returned city
@@ -141,4 +142,164 @@ function totaldiff(city1,city2) {
 	var long = difflatlong(city1,city2)[1];
 	var total = Math.sqrt(Math.pow(lat,2),Math.pow(long,2));
 	return total;
+}
+
+
+var newModel=getUserQueryModel();
+var newAct;
+var i;
+//var display = queryForAllCities(newModel["start"], newModel["end"]);
+var apikey= "NH6oq54KA957fmLpv3x1pFx8CE1xhRoc";
+//breakPoint:[lat,lon]
+
+
+function getUserQueryModel(){
+	var start = $("#dep_city").val();
+	var end = $("#dest_city").val();
+	//var days = document.getElementById("duration").value;
+	var trip={start: "start", end: "end", dur: "days"};
+	return trip;
+}
+
+
+function getActivities(cityName) {
+	var model_arr=[];
+    var today = "2016-06-10"; // replace with function later
+    var tmrw = "2016-06-12"; // replace with function later
+	var html = "http://terminal2.expedia.com:80/x/activities/search?location="+cityName+"&startDate="+today+"&endDate="+tmrw+"&apikey="+apikey;
+	$.get(html,function(data,status){ //data is an array of JSON object
+		//parse an object
+		var actModel;
+		for (i=0; i<data.length;i++){
+			var name = data[i].title;
+			var price = data[i].fromPrice;
+			var dur = data[i].duration;
+			var recScore = data[i].recommendationScore;
+			var img = data[i].imageUrl;
+			actModel= {"name": name, "price": price, "dur": dur, "recScore": recScore, "img": img};
+			model_arr[i]=actModel;
+		}
+
+	})
+	return model_arr;
+}
+
+
+function getCitiesInBetween(startCity, endCity){
+/*	var startlat = coord(startCity)[0];
+	var startlon = coord(startCity)[1];
+	var endlat = coord(endCity)[0];
+	var endlon = coord(endCity)[1];*/
+	
+
+	var html = queryCitiesInBetween(startCity, endCity);
+	var model_arr=[];
+	$.get(html,function(data,status){ //data is an array of JSON object
+		//parse an object
+		var actModel;
+		for (i=0; i<data.length;i++){
+			var name = data[i].name;
+			var lat = data[i]["coordinates"][1];
+			var lon = data[i]["coordinates"][0];
+			var dis = getDistance(lat,lon,breakPoint[0],breakPoint[1])
+			cityModel= {"name": name, "lat": lat, "lon": lon, "dis": dis};
+			model_arr[i]=cityModel;
+		}
+
+	});
+	return model_arr;
+}
+
+function sortAllCities(cityModels_arr){
+	var firstModels=[]
+	//sort input cityModels
+	cityModels_arr.sort(function(a,b){
+		if (a.dis > b.dis){
+			return 1;
+		}
+		if (a.dis > b.dis){
+			return -1;
+		}
+		return 0;
+	});
+	//get the first 5 cityModels
+	for (i=0;i<5;i++){
+		firstModels[i]=cityModels_arr[i];
+	}
+	return firstModels;
+
+}
+
+function getCheapestHotel(cityName){
+	var model_arr=[];
+    var today = "2016-06-10"; // replace with function later
+    var tmrw = "2016-06-11"; // replace with function later
+    var html = "http://terminal2.expedia.com:80/x/mhotels/search?city="+cityName+"&checkInDate=2016-12-01&checkOutDate=2016-12-03&room1=1&apikey="+apikey
+    $.get(html,function(data,status){ //data is an array of JSON object
+		//parse an object
+		var hotelModel;
+		for (i=0; i<data.length;i++){
+			var name = data[i].name;
+			var price = data[i].price;
+			
+			hotelModel= {"name": name, "price": price};
+			model_arr[i]=hotelModel;
+		}
+	});
+	model_arr.sort(function(a,b){
+		if (a.price > b.price){
+			return 1;
+		}
+		if (a.price > b.price){
+			return -1;
+		}
+		return 0;
+	});
+	return model_arr[0];
+}
+
+function getHotelsForCities(cityModels_arr){
+	var cheapHotelModel_arr;
+	for(i=0;i<5;i++){
+		var city_name = cityModels_arr[i].name;
+		var hotelModel = getCheapestHotel(city_name);
+		cheapHotelModel_arr[i] = hotelModel;
+	}
+	return cheapHotelModel_arr;
+}
+
+var breakPoint =[0,0];
+function getBreakPoint(startCity, endCity, distancePerDay)
+{
+    //c1[0] is latitude, c1[1] is longitude
+    var c1 = coord(startCity);
+    var c2 = coord(endCity);
+    //var c1 = [48.85, 2.35];
+    //var c2 = [41.89, 12.48];
+    var radlat1 = Math.PI * c1[0]/180;
+    var radlat2 = Math.PI * c1[1]/180;
+    var theta = c1[1] - c2[1];
+    var radtheta = Math.PI * theta/180;
+    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    dist = Math.acos(dist);
+    dist = dist * 180/Math.PI;
+    dist = dist * 60 * 1.1515;
+    dist = dist * 1.609344;    var times = dist/distancePerDay;
+    var bpLat = c1[0]+(c2[0]-c1[0])/times;
+    var bpLng = c1[1]+(c2[1]-c1[1])/times;
+    bpLat = bpLat.toFixed(3);
+    bpLng = bpLng.toFixed(3);
+    breakPoint = [bpLat, bpLng];
+}
+
+function queryCitiesInBetween(startCity, endCity)
+{
+    getBreakPoint(startCity, endCity);    //midpoint[0] is latitude, midpoint[1] is longitude
+    //var diffInLat = (c2[0]-c1[0]);
+    //var diffInLng = (c2[1]-c1[1]);
+    //var midpoint = [(diffInLat/2)+c1[0],(diffInLng/2)+c1[1]];    
+    var radiusInKm = Math.min(distancePerDay, 100);
+    var html1 = "http://terminal2.expedia.com/x/geo/features?within="+radiusInKm+"km&lat="+breakPoint[0]+"&lng="+breakPoint[1]+"&type=city&apikey="+apikey;
+    //return html1;
+    return html1;
 }
