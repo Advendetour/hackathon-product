@@ -81,3 +81,10 @@ function difflatlong(city1,city2){
   return result;
 
 }
+
+function totaldiff(city1,city2) {
+	var lat = difflatlong(city1,city2)[0];
+	var long = difflatlong(city1,city2)[1];
+	var total = Math.sqrt(Math.pow(lat,2),Math.pow(long,2));
+	return total;
+}
