@@ -10,7 +10,7 @@
 		directionsDisplay.setMap(map);
 
 		$("#start_search").click(function(){
-			debugger;
+		
 			startName = $("#dep_city").val()
 			start = coord(startName);
 			end = coord($("#dest_city").val());
