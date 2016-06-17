@@ -21,23 +21,15 @@ $(document).ready(function(){
 		$("#cities").append(ret);
 
 		// find and display mid cities
-		var output = find_cities(depcity, destcity);
-		$("#cities").append(output);
-
-		// finally add destination city
-		var ret = '<div class="city" data-set="true" data-name='+destcity+'>'+destcity+", "+stateCountry(destcity)[0]+", "+stateCountry(destcity)[1]+'<div class="activities"></div></div>';
-		$("#cities").append(ret);
-
-		// lastly, hide all activities section so toggle() works later
-		$(".activities").hide();
+		var output = getCitiesInBetween(depcity, destcity);
+		// function ends here! because callbacks are baaaad and we dont want em
 	});
 	$("#end_search").click(function(){
 		$(".city[data-set='false']").hide();
 	});
 });
 
-function find_cities(dep, dest){
-	citylist = getCitiesInBetween(dep, dest);
+function build_city_display(citylist){
 	var output = "";
 	// add each returned city
 	citylist.forEach(function(value){
@@ -47,7 +39,60 @@ function find_cities(dep, dest){
 		output += ret;
 		//calculateAndDisplayRoute(value.name);
 	});
-	return output;
+	display_cities(output);
+}
+
+function getCitiesInBetween(startCity, endCity){
+
+	var html = queryCitiesInBetween(startCity, endCity);
+	var model_arr=[];
+
+	$.get({
+		url: html,
+		async:false,
+		success: function(data){
+			var cityModel;
+			for (i=0; i<data.length;i++){
+				var name = data[i]["name"];
+				var lat = data[i]["position"]["coordinates"][1];
+				var lon = data[i]["position"]["coordinates"][0];
+				var dis = calcCrow(lat,lon,breakPoint[0],breakPoint[1])
+				cityModel = {"name": name, "lat": lat, "lon": lon, "dis": dis};
+				model_arr[i]=cityModel;
+			}
+			model_arr = sortAllCities(model_arr);
+			build_city_display(model_arr);
+		}
+	});
+}
+
+function display_cities(city_output){
+	$("#cities").append(city_output);
+	// finally add destination city
+	var ret = '<div class="city" data-set="true" data-name='+destcity+'>'+destcity+", "+stateCountry(destcity)[0]+", "+stateCountry(destcity)[1]+'<div class="activities"></div></div>';
+	$("#cities").append(ret);
+	// lastly, hide all activities section so toggle() works later
+	$(".activities").hide();
+}
+
+function queryCitiesInBetween(startCity, endCity){
+    getBreakPoint(startCity, endCity);
+    var radiusInKm = Math.min(distancePerDay, 100);
+    var html1 = "http://terminal2.expedia.com/x/geo/features?within="+radiusInKm+"km&lat="+breakPoint[0]+"&lng="+breakPoint[1]+"&type=city&apikey="+apikey;
+    return html1;
+}
+
+function sortAllCities(model_arr){
+	var firstModels=[]
+	//sort input cityModels
+	model_arr.sort(function(a,b){
+		return b.dis-a.dis;
+	});
+	//get the first 5 cityModels
+	for (i=0;i<5;i++){
+		firstModels[i]=model_arr[i];
+	}
+	return firstModels;
 }
 
 // on click of city tab, query or toggle display of related activities
@@ -215,55 +260,6 @@ function sortActivities(model_arr){
 	return firstModels;
 }
 
-function getCitiesInBetween(startCity, endCity){
-
-	var html = queryCitiesInBetween(startCity, endCity);
-	var model_arr=[];
-
-	$.get({
-		url: html,
-		async:false,
-		success: function(data){
-			var actModel;
-			for (i=0; i<data.length;i++){
-				var name = data[i]["name"];
-				//console.log(name);
-				var lat = data[i]["position"]["coordinates"][1];
-				var lon = data[i]["position"]["coordinates"][0];
-				var dis = calcCrow(lat,lon,breakPoint[0],breakPoint[1])
-				cityModel= {"name": name, "lat": lat, "lon": lon, "dis": dis};
-				model_arr[i]=cityModel;
-			}
-			model_arr = sortAllCities(model_arr);
-		}
-	});
-	return model_arr;
-}
-
-function queryCitiesInBetween(startCity, endCity){
-    getBreakPoint(startCity, endCity);    //midpoint[0] is latitude, midpoint[1] is longitude
-    //var diffInLat = (c2[0]-c1[0]);
-    //var diffInLng = (c2[1]-c1[1]);
-    //var midpoint = [(diffInLat/2)+c1[0],(diffInLng/2)+c1[1]];
-    var radiusInKm = Math.min(distancePerDay, 100);
-    var html1 = "http://terminal2.expedia.com/x/geo/features?within="+radiusInKm+"km&lat="+breakPoint[0]+"&lng="+breakPoint[1]+"&type=city&apikey="+apikey;
-    //return html1;
-    return html1;
-}
-
-function sortAllCities(model_arr){
-	var firstModels=[]
-	//sort input cityModels
-	model_arr.sort(function(a,b){
-		return b.dis-a.dis;
-	});
-	//get the first 5 cityModels
-	for (i=0;i<5;i++){
-		firstModels[i]=model_arr[i];
-	}
-	return firstModels;
-}
-
 function getCheapestHotel(cityName){
 	//city=encodeURIComponent(cityName);
 	var model_arr=[];
@@ -316,6 +312,7 @@ function getBreakPoint(startCity, endCity){
 	var bY = c1[1]+deltaY;
 	breakPoint = [bX, bY];
 }
+
 function calcCrow(lat1, lon1, lat2, lon2) {
 	var R = 6371; // km
 	var dLat = toRad(lat2-lat1);
@@ -329,6 +326,7 @@ function calcCrow(lat1, lon1, lat2, lon2) {
 	var d = R * c;
 	return d;
 }
+
 function toRad(Value) {
 	return Value * Math.PI / 180;
 }
