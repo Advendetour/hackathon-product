@@ -127,7 +127,19 @@ $(document).on('click', '.city', function(){
 	activities.slideToggle();*/
 
 });
-
+function find_cities(dep, dest){
+	citylist = getCitiesInBetween(dep, dest);
+	var output = "";
+	// add each returned city
+	citylist.forEach(function(value){
+		city = encodeURIComponent(value.name);
+		var hotel = getCheapestHotel(city);
+		var ret = '<div class="city" data-set="false" data-name='+city+'>'+value.name+'<span class="hotel">$'+hotel.price+'<span class="mini"> (one night hotel)</span></span><button type="button" class="add_city">Add to route</button><div class="activities"></div></div>';
+		output += ret;
+		//calculateAndDisplayRoute(value.name);
+	});
+	return output;
+}
 // on click of city tab, query or toggle display of related activities
 $(document).on('click', '.add_city', function(){
 	// keep chosen city and remove others
