@@ -9,6 +9,8 @@ function initMap() {
 	var directionsService = new google.maps.DirectionsService;
 	var directionsDisplay = new google.maps.DirectionsRenderer;
 	map = new google.maps.Map(document.getElementById('map'), {
+		mapTypeControl: false,
+		streetViewControl: false,
 		zoom: 6,
 		center: {lat: 41.85, lng: -87.65}
 	});

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 	<script src="jquery-1.12.4.min.js"></script>
 	<script src="./index.js"></script>
@@ -10,26 +11,45 @@
 </head>
 <body>
 <div id="mainpanel">
+	<div id="logopanel">
+		Routing re-imagined<br>
+		<!-- put logo img here -->
+		Advendetour<br>
+		brings travelers new worlds to explore.
+	</div>
 	<div id="startpanel">
-		Departure City
+		Departure City<br>
 		<input type="text" name="dep_city" id="dep_city">
 		<br>
-		Destination City
+		Destination<br>
+		<input type="radio" name="dest_known" value="false" checked>Undecided<br>
+		<input type="radio" name="dest_known" value="true" checked>Known 
 		<input type="text" name="dest_city" id="dest_city">
 		<br>
 		How far would you like to travel per day?
 		<input type="text" name="distance_per_day" id="distance_per_day"> Km
 		<br><br>
 		<button type="button" id="start_search">Start your journey</button>
-		<button type="button" id="end_search">Finalize your journey</button>
 	</div>
 	<br><br>
-	<div id="directions_panel"></div>
+	<div id="directions_panel">
+		
+	</div>
 	<br><br>
-	<div id="cities"></div>
+	<div id="cities">
+		
+	</div>
+	<button type="button" id="end_search">Finalize your journey</button>
+
 </div>
-<div id="map"></div>
-
-
+<div id="map">
+</div>
+<div id="mapbuttonpanel">
+	<button type="button" class="mapbutton" id="region">Search region</button>
+	<button type="button" class="mapbutton" id="go">Go</button>
+	<button type="button" class="mapbutton" id="explore">Explore</button>
+	<button type="button" class="mapbutton" id="eat">Eat</button>
+	<button type="button" class="mapbutton" id="sleep">Sleep</button>
+</div>
 </body>
 </html>
