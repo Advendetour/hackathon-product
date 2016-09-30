@@ -15,14 +15,14 @@ function initMap() {
 		center: {lat: 41.85, lng: -87.65}
 	});
 	directionsDisplay.setMap(map);
-	$("#start_search").click(function(){
+	/*$("#start_search").click(function(){
 		//debugger;
 		start = coord($("#dep_city").val());
 		end = coord($("#dest_city").val());
 		origin = new google.maps.LatLng(start[0],start[1]);
 		dest = new google.maps.LatLng(end[0],end[1]);
 		calculateAndDisplayRoute(directionsService,directionsDisplay);
-	});
+	});*/
 	$(".add_city").click(function(){
 		calculateAndDisplayRoute(directionsService,directionsDisplay);
 	});
