@@ -29,11 +29,21 @@ $(document).ready(function(){
 
 // FUNCTIONS
 
+// dynamic display of search range when using slider
+// called by html
 function showVal(km){
 	$("#distance").text(km);
 }
 
+// start search
+// checks inputs, hides input form, starts route, performs initial explore search
 function start_search(){
 	dep_city_string = $("#dep_city").val();
-	geocodeAddress(dep_city_string);
+	/* if dest_city is not blank, 
+		pass geocodeAddress callback X, 
+			callback X just attempts to geocode the dest_city too!
+			and itself then uses callback to display route
+		else pass callback Y
+	*/
+	geocodeAddress(dep_city_string, console.log);
 }

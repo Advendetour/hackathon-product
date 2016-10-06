@@ -24,6 +24,7 @@ var gmapkey = "AIzaSyAwe6XMoayWw_yOH48YW4zBNf2XGnyZYeo";
 
 // FUNCTIONS
 
+// initialize map and services
 function initMap() {	
 	
 	map = new google.maps.Map(document.getElementById('map'), {
@@ -42,16 +43,18 @@ function initMap() {
 
 }
 
-function geocodeAddress(address) {
+// take string input, return lat/long coordinates
+function geocodeAddress(address, callback) {
 	geocoder.geocode({'address': address}, function(results, status) {
 		if (status === 'OK') {
-			map.setCenter(results[0].geometry.location);
+			callback(results[0].geometry.location);
+			/*map.setCenter(results[0].geometry.location);
 			var marker = new google.maps.Marker({
 				map: map,
 				position: results[0].geometry.location
-			});
+			});*/
 		} else {
-			alert('Geocode was not successful for the following reason: ' + status);
+			callback('Geocode was not successful for the following reason: ' + status);
 		}
 	});
 }
