@@ -5,8 +5,8 @@
 
 // GLOBAL VARS
 
-var start;
-var end;
+var dep_coords;
+var dest_coords;
 var origin;
 var dest;
 var bypass=[];
@@ -44,17 +44,13 @@ function initMap() {
 }
 
 // take string input, return lat/long coordinates
-function geocodeAddress(address, callback) {
+function geocodeAddress(address, output, callback) {
 	geocoder.geocode({'address': address}, function(results, status) {
 		if (status === 'OK') {
-			callback(results[0].geometry.location);
-			/*map.setCenter(results[0].geometry.location);
-			var marker = new google.maps.Marker({
-				map: map,
-				position: results[0].geometry.location
-			});*/
+			output = results[0].geometry.location;
+			callback;
 		} else {
-			callback('Geocode was not successful for the following reason: ' + status);
+			console.log('Geocode was not successful for the following reason: ' + status);
 		}
 	});
 }
