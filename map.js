@@ -48,9 +48,20 @@ function geocodeAddress(address, output, callback) {
 	geocoder.geocode({'address': address}, function(results, status) {
 		if (status === 'OK') {
 			output = results[0].geometry.location;
-			callback;
+			console.log (output);
+			callback();
 		} else {
 			console.log('Geocode was not successful for the following reason: ' + status);
 		}
 	});
 }
+
+/*function centreMap(address, callback){
+	geocoder.geocode({'address': address}, function(results, status) {
+		if (status === 'OK') {
+			map.setCenter(results[0].geometry.location);
+		} else {
+			alert('Geocode was not successful for the following reason: ' + status);
+		}
+	});
+}*/

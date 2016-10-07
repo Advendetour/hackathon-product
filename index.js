@@ -7,6 +7,8 @@
 // GLOBAL VARS
 
 var distancePerDay;
+var dep_string;
+var dest_string;
 
 // DOC READY AND BUTTON CALLS
 
@@ -36,24 +38,39 @@ function showVal(km){
 function isEmpty(str) {
     return (!str || 0 === str.length);
 }
-// start search
-// checks inputs, hides input form, starts route, performs initial explore search
+
 function check_dep(){
-	var dep_string = $("#dep_city").val();
+	dep_string = $("#dep_city").val();
 	if (!isEmpty(dep_string)){
-		geocodeAddress(dep_string, dep_coords, check_dest);
+		geocoder.geocode({'address': dep_string}, function(results, status) {
+			if (status === 'OK') {
+				dep_coords = results[0].geometry.location;
+				check_dest();
+			} else {
+				console.log('Geocode was not successful for the following reason: ' + status);
+			}
+		});
 	}
 }
 
 function check_dest(){
-	var dest_string = $("#dest_input").val();
+	dest_string = $("#dest_input").val();
 	if ($("#dest_known").is(':checked') && !isEmpty(dest_string)) {
-		geocodeAddress(dest_string, dest_coords, next_step);
-	} else next_step;
+		geocoder.geocode({'address': dest_string}, function(results, status) {
+			if (status === 'OK') {
+				dest_coords = results[0].geometry.location;
+				next_step();
+			} else {
+				console.log('Geocode was not successful for the following reason: ' + status);
+			}
+		});
+	} else next_step();
 }
 
 function next_step(){
 	console.log("reached next step!");
+	console.log(dep_coords);
+	map.setCenter(dep_coords);
 }
 	/* if dest_city is not blank, 
 		pass geocodeAddress callback X, 
