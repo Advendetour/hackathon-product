@@ -1,0 +1,98 @@
+* {padding:0; margin:0;}
+html, body{
+	min-height:100%;
+	height: 100%;
+}
+
+#mainpanel{
+	float: left;
+	z-index: 3;
+	min-width: 300px;
+	width: 30%;
+	max-width: 600px;
+	height: 100%;
+	background: lightgrey;
+}
+#mainpanel > * {
+	/*direct children*/
+	margin: 1em;
+}
+#map{
+	overflow:hidden;
+	z-index: 1;
+	height: 100%;
+}
+#mapbuttonpanel{
+	/*display: none;*/
+	position: fixed;
+	z-index: 2;
+	margin: 1em;
+	top: 0;
+	right: 0;
+}
+
+#distance_per_day{
+	width:5em;
+}
+
+
+h1 {
+	color: white;
+	font-family: 'Helvetica Neue',
+	sans-serif; font-size: 70px;
+	font-weight: bold;
+	letter-spacing: -1px;
+	line-height: 1;
+	text-align: center;
+}
+.hotel{    
+	font-size: 1em;
+	display: inline;
+	margin-left: 10px;
+}
+.mini{
+	font-size:0.6em;
+}
+#toplevel {
+	color: white;
+	font-family: 'Helvetica Neue', sans-serif; font-size: 1.4em;
+	font-weight: bold;
+	letter-spacing: -1px;
+	line-height: 1;
+	text-align: center;
+}
+
+.city {
+	border-radius: 10px;
+	background: grey;
+	margin: 20px;
+	padding: 10px;
+
+	font-family: 'Enriqueta', arial, serif; line-height: 1.25; margin: 0 0 10px; font-size: 1em; font-weight: bold;
+	color: white;
+}
+.activity{
+	border-radius: 10px;
+	background: lightgrey;
+	margin: 10px;
+	padding: 5px;
+	left: 20px;
+	font-family: 'Enriqueta', arial, serif; line-height: 1.25; margin: 0 0 10px; font-size: 1em; font-weight: bold;
+	color: #363636;
+	background-position: right center;
+	background-repeat: no-repeat;
+}
+.add_city{
+	float: right;
+}
+
+.city[data-set="true"]{
+	background: #0A4958;
+}
+html { 
+  /*background: url("../AngelTrips/blurblue.jpg") no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+*/}
