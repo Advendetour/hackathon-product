@@ -18,19 +18,19 @@
 		brings travelers new worlds to explore.
 	</div>
 	<div id="startpanel">
-		Departure City<br>
-		<input type="text" name="dep_city" id="dep_city">
-		<br>
-		Destination<br>
-		<input type="radio" id="dest_unknown" name="dest_known" value="false" checked>Undecided<br>
-		<input type="radio" id="dest_known" name="dest_known" value="true">Known 
-		<input type="text" id="dest_input" name="dest_city" id="dest_city" hidden>
-		<br>
-		How far would you like to travel per day?
-		<br>
-		<input type="range" name="distance_per_day" id="distance_per_day" min="10" max="1000" step="1" oninput="showVal(this.value)" onchange="showVal(this.value)"><span id="distance"></span> Km
-		<br><br>
-		<button type="button" id="start_search">Start your journey</button>
+		<form onsubmit="start_search()" action="javascript:void(0)">
+			Departing City<br>
+			<input type="text" name="dep_city" id="dep_city" required>
+			<br>
+			Destination City<br>
+			<input type="text" name="dest_city" id="dest_city" required>
+			<br>
+			How far would you like to travel per day?
+			<br>
+			<input type="range" name="distance_per_day" id="distance_per_day" min="10" max="1000" step="1" oninput="showVal(this.value)" onchange="showVal(this.value)"><span id="distance"></span> Km
+			<br><br>
+			<input type="submit" value="Start your journey">
+		</form>
 	</div>
 	<br><br>
 	<div id="directions_panel">

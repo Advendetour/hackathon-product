@@ -13,17 +13,7 @@ var dest_string;
 // DOC READY AND BUTTON CALLS
 
 $(document).ready(function(){
-	$("#dest_known").click(function(){
-		if ($(this).is(':checked')){
-			$("#dest_input").slideDown();
-		}
-	});
-	$("#dest_unknown").click(function(){
-		if ($(this).is(':checked')){
-			$("#dest_input").slideUp();
-		}
-	});
-	$("#start_search").click(check_dep);
+	$("#start_search").click(start_search);
 });
 
 
@@ -39,43 +29,32 @@ function isEmpty(str) {
     return (!str || 0 === str.length);
 }
 
-function check_dep(){
+function start_search(){
 	dep_string = $("#dep_city").val();
-	if (!isEmpty(dep_string)){
-		geocoder.geocode({'address': dep_string}, function(results, status) {
-			if (status === 'OK') {
-				dep_coords = results[0].geometry.location;
-				check_dest();
-			} else {
-				console.log('Geocode was not successful for the following reason: ' + status);
-			}
-		});
-	}
+	dest_string = $("#dest_city").val();
+	check_dep();
 }
-
+function check_dep(){
+	geocoder.geocode({'address': dep_string}, function(results, status) {
+		if (status === 'OK') {
+			dep_coords = results[0].geometry.location;
+			check_dest();
+		} else {
+			console.log('Geocode was not successful for the following reason: ' + status);
+		}
+	});
+}
 function check_dest(){
-	dest_string = $("#dest_input").val();
-	if ($("#dest_known").is(':checked') && !isEmpty(dest_string)) {
-		geocoder.geocode({'address': dest_string}, function(results, status) {
-			if (status === 'OK') {
-				dest_coords = results[0].geometry.location;
-				next_step();
-			} else {
-				console.log('Geocode was not successful for the following reason: ' + status);
-			}
-		});
-	} else next_step();
+	geocoder.geocode({'address': dest_string}, function(results, status) {
+		if (status === 'OK') {
+			dest_coords = results[0].geometry.location;
+			init_route();
+		} else {
+			console.log('Geocode was not successful for the following reason: ' + status);
+		}
+	});
 }
 
-function next_step(){
-	console.log("reached next step!");
-	console.log(dep_coords);
-	map.setCenter(dep_coords);
+function init_route(){
+	console.log("next step is to initialize the route!");
 }
-	/* if dest_city is not blank, 
-		pass geocodeAddress callback X, 
-			callback X just attempts to geocode the dest_city too!
-			and itself then uses callback to display route
-		else pass callback Y
-	*/
-	
