@@ -14,6 +14,7 @@ var dest_string;
 
 $(document).ready(function(){
 	$("#start_search").click(start_search);
+	$("#testbtn").click(searchNearby);
 });
 
 // FUNCTIONS

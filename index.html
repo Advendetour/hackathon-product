@@ -7,7 +7,7 @@
 	<script src="./index.js"></script>
 	<script src="./map.js"></script>
 	<script async defer 
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5LyIEhdrka55mYbw5pIHSwDyA-FR82gw&callback=initMap"></script>
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB5LyIEhdrka55mYbw5pIHSwDyA-FR82gw&callback=initMap&libraries=places"></script>
 	<link rel="stylesheet" type="text/css" href="./index.css">
 </head>
 <body>
@@ -32,6 +32,9 @@
 			<br><br>
 			<input type="submit" value="Start your journey">
 		</form>
+	</div>
+	<div id="explorepanel">
+		<button type="button" id="testbtn">Display view port bounds</button>
 	</div>
 </div>
 <div id="map">

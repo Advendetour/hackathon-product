@@ -18,6 +18,9 @@ var map;
 var geocoder;
 var directionsService;
 var directionsDisplay;
+var placesService;
+var infowindow;
+
 
 // KEY - should be kept seperate
 
@@ -33,10 +36,15 @@ function initMap() {
 		zoom: 6,
 		center: {lat: 41.85, lng: -87.65}
 	});
+	infowindow = new google.maps.InfoWindow();
 	geocoder = new google.maps.Geocoder();
 	directionsService = new google.maps.DirectionsService;
 	directionsDisplay = new google.maps.DirectionsRenderer;
 	directionsDisplay.setMap(map);
+	placesService = new google.maps.places.PlacesService(map);
+	
+
+
 }
 function check_dep(){
 	geocoder.geocode({'address': dep_string}, function(results, status) {
@@ -75,6 +83,42 @@ function calculateAndDisplayRoute() {
 		}
 	});
 }
+function getViewportBounds(){
+	var bounds = map.getBounds();
+	var urlBounds = bounds.toUrlValue();
+	console.log(urlBounds);
+}
+function searchNearby(){
+	placesService.nearbySearch({
+		bounds: map.getBounds(),
+		rankby: google.maps.places.RankBy.PROMINENCE,
+		type: 'locality'
+		}, searchCallback);
+}
+
+function searchCallback(results, status) {
+	console.log(results);
+	if (status === google.maps.places.PlacesServiceStatus.OK) {
+		  for (var i = 0; i < results.length; i++) {
+		    createMarker(results[i]);
+		  }
+	}
+}
+
+function createMarker(place) {
+	var placeLoc = place.geometry.location;
+	var marker = new google.maps.Marker({
+	  map: map,
+	  position: place.geometry.location
+	});
+
+	google.maps.event.addListener(marker, 'click', function() {
+	  infowindow.setContent(place.name);
+	  infowindow.open(map, this);
+	});
+}
+
+
 
 // take string input, return lat/long coordinates
 /*function geocodeAddress(address, output, callback) {
